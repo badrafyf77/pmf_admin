@@ -1,0 +1,49 @@
+name: pmf_admin
+description: "A new Flutter project."
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.4.0 <4.0.0"
+
+dependencies:
+  bitsdojo_window: ^0.1.6
+  board_datetime_picker: ^1.6.6
+  cached_network_image: ^3.3.1
+  cloud_firestore: ^5.0.0
+  dartz: ^0.10.1
+  dropdown_button2: ^2.3.9
+  firebase_auth: ^5.1.0
+  firebase_core: ^3.0.0
+  firebase_storage: ^12.0.0
+  fl_chart: ^0.68.0
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^8.1.5
+  get_it: ^7.7.0
+  go_router: ^14.1.4
+  google_fonts: ^6.2.1
+  image_picker: ^1.1.2
+  loading_indicator: ^3.1.1
+  lottie: ^3.1.2
+  simple_month_year_picker: ^1.0.5
+  skeletonizer: ^1.3.0
+  toastification: ^2.0.0
+  uuid: ^4.4.0
+
+dev_dependencies:
+  flutter_lints: ^3.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/json/
+  # fonts:
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
