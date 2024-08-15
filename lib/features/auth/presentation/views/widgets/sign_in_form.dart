@@ -122,8 +122,6 @@ class _SignInFormState extends State<SignInForm> {
                     }
                   },
                   backgroundColor: AppColors.kPrimaryColor,
-                  height: 40,
-                  width: size.width * 0.32,
                 );
               },
             ),

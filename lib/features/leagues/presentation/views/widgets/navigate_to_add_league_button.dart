@@ -18,8 +18,6 @@ class NavigateToAddLeague extends StatelessWidget {
         },
         title: 'Add League',
         backgroundColor: AppColors.kPrimaryColor,
-        height: 38,
-        width: 220,
       ),
     );
   }

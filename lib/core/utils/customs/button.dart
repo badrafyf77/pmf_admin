@@ -8,8 +8,6 @@ class CustomButton extends StatelessWidget {
     required this.title,
     required this.backgroundColor,
     this.textColor = Colors.white,
-    required this.height,
-    required this.width,
     this.fontSize = 14,
   });
 
@@ -17,24 +15,21 @@ class CustomButton extends StatelessWidget {
   final String title;
   final Color backgroundColor;
   final Color textColor;
-  final double height;
-  final double width;
   final double fontSize;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: height,
-      width: width,
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ButtonStyle(
-          backgroundColor: WidgetStatePropertyAll(backgroundColor),
-          foregroundColor: const WidgetStatePropertyAll(Colors.white),
-          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          ),
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ButtonStyle(
+        backgroundColor: WidgetStatePropertyAll(backgroundColor),
+        foregroundColor: const WidgetStatePropertyAll(Colors.white),
+        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
         child: Center(
           child: Text(
             title,

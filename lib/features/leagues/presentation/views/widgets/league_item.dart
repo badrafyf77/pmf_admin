@@ -125,8 +125,6 @@ class LeagueItem extends StatelessWidget {
                             },
                             title: 'Voir Plus',
                             backgroundColor: AppColors.kPrimaryColor,
-                            height: 35,
-                            width: 120,
                           ),
                         ),
                         EditEventIconButton(

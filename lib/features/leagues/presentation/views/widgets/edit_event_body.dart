@@ -141,8 +141,6 @@ class _EditEventBodyState extends State<EditEventBody> {
                         height: 10,
                       ),
                       CustomDateAndTimePicker(
-                        height: 30,
-                        width: constraints.maxWidth,
                         date: date,
                         onPressed: () async {
                           final result = await showBoardDateTimePicker(
@@ -306,8 +304,6 @@ class _EditEventBodyState extends State<EditEventBody> {
                 },
                 title: "Editer",
                 backgroundColor: AppColors.kPrimaryColor,
-                height: 35,
-                width: 130,
               ),
             ],
           ),
