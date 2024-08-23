@@ -1,14 +1,10 @@
 import 'package:board_datetime_picker/board_datetime_picker.dart';
 import 'package:pmf_admin/core/config/router.dart';
-import 'package:pmf_admin/core/utils/colors.dart';
-import 'package:pmf_admin/core/utils/customs/animated_container.dart';
-import 'package:pmf_admin/core/utils/customs/button.dart';
 import 'package:pmf_admin/core/utils/customs/cashed_network_image.dart';
+import 'package:pmf_admin/core/utils/customs/manage_buttons.dart';
 import 'package:pmf_admin/core/utils/styles.dart';
 import 'package:pmf_admin/features/leagues/data/model/league_model.dart';
 import 'package:flutter/material.dart';
-import 'package:pmf_admin/features/leagues/presentation/views/widgets/delete_event_iconbutton.dart';
-import 'package:pmf_admin/features/leagues/presentation/views/widgets/edit_event_iconbutton.dart';
 
 class LeagueItem extends StatelessWidget {
   const LeagueItem({
@@ -117,21 +113,20 @@ class LeagueItem extends StatelessWidget {
                             ],
                           ),
                         ),
-                        CustomAnimatedContainer(
-                          child: CustomButton(
-                            onPressed: () {
-                              AppRouter.navigateToWithExtra(
-                                  context, AppRouter.eventInfo, league);
-                            },
-                            title: 'Voir Plus',
-                            backgroundColor: AppColors.kPrimaryColor,
-                          ),
+                        ManageButton(
+                          onPressed: () {
+                            AppRouter.navigateTo(
+                                context, AppRouter.leagueTable);
+                          },
                         ),
-                        EditEventIconButton(
-                          event: league,
+                        EditButton(
+                          onPressed: () {},
                         ),
-                        DeleteEventIconButton(
-                          event: league,
+                        DeleteButton(
+                          onPressed: () {
+                            // BlocProvider.of<DeleteEventBloc>(context)
+                            // .add(DeleteEvent(event: event));
+                          },
                         ),
                       ],
                     )

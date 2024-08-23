@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:pmf_admin/core/config/router.dart';
 import 'package:pmf_admin/core/utils/colors.dart';
 import 'package:pmf_admin/core/utils/customs/app_logo.dart';
@@ -70,7 +69,7 @@ class AppDrawerState extends State<AppDrawer> {
         // GoRouter.of(context).go(AppRouter.activities);
         break;
       case 4:
-        // GoRouter.of(context).go(AppRouter.galleries);
+        GoRouter.of(context).go(AppRouter.players);
         break;
       case 5:
         // GoRouter.of(context).go(AppRouter.messages);

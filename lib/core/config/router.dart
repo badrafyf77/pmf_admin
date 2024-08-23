@@ -2,12 +2,14 @@ import 'package:pmf_admin/features/leagues/data/model/league_model.dart';
 import 'package:pmf_admin/core/utils/customs/dashboard_screen.dart';
 import 'package:pmf_admin/features/auth/presentation/views/sign_in_view.dart';
 import 'package:pmf_admin/features/leagues/presentation/views/add_league_view.dart';
-import 'package:pmf_admin/features/leagues/presentation/views/edit_event_view.dart';
-import 'package:pmf_admin/features/leagues/presentation/views/event_info_view.dart';
+import 'package:pmf_admin/features/leagues/presentation/views/edit_league_view.dart';
+import 'package:pmf_admin/features/leagues/presentation/views/league_matches_view.dart';
+import 'package:pmf_admin/features/leagues/presentation/views/league_table_view.dart';
 import 'package:pmf_admin/features/leagues/presentation/views/leagues_view.dart';
 import 'package:pmf_admin/features/home/presentation/view/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pmf_admin/features/players/presentation/views/players_view.dart';
 
 CustomTransitionPage buildPageWithDefaultTransition<T>({
   required BuildContext context,
@@ -29,9 +31,11 @@ class AppRouter {
   static const signIn = "/k";
   static const home = '/';
   static const leagues = '/leagues';
-  static const addLeague = '/addLeague';
-  static const eventInfo = '/eventInfo';
+  static const addLeague = '/add-league';
+  static const leagueTable = '/league-table';
+  static const leagueMatches = '/league-matches';
   static const editEvent = '/editEvent';
+  static const players = '/players';
 
   static final router = GoRouter(
     routes: [
@@ -76,17 +80,17 @@ class AppRouter {
             ),
           ),
           GoRoute(
-              path: eventInfo,
-              pageBuilder: (context, state) {
-                League event = state.extra as League;
-                return buildPageWithDefaultTransition<void>(
-                  context: context,
-                  state: state,
-                  child: EventInfoView(
-                    event: event,
-                  ),
-                );
-              }),
+            path: leagueTable,
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: LeagueTableView(),
+            ),
+          ),
+          GoRoute(
+            path: leagueMatches,
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: LeagueMatchesView(),
+            ),
+          ),
           GoRoute(
             path: editEvent,
             pageBuilder: (context, state) {
@@ -99,6 +103,15 @@ class AppRouter {
                 ),
               );
             },
+          ),
+          GoRoute(
+            path: players,
+            pageBuilder: (context, state) =>
+                buildPageWithDefaultTransition<void>(
+              context: context,
+              state: state,
+              child: const PlayersView(),
+            ),
           ),
         ],
       ),

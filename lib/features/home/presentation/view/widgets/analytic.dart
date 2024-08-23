@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:board_datetime_picker/board_datetime_picker.dart';
 import 'package:pmf_admin/core/utils/colors.dart';
 import 'package:pmf_admin/core/utils/assets.dart';

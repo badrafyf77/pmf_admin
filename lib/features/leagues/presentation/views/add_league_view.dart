@@ -1,3 +1,5 @@
+import 'package:pmf_admin/core/config/router.dart';
+import 'package:pmf_admin/core/utils/customs/navigate_back_iconbutton.dart';
 import 'package:pmf_admin/features/leagues/presentation/views/widgets/add_league_body.dart';
 import 'package:flutter/material.dart';
 
@@ -6,21 +8,21 @@ class AddLeagueView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // NavigateBackIcon(
-          //   title: 'Ajouter un événement',
-          //   onPressed: () {
-          //     AppRouter.navigateTo(context, AppRouter.events);
-          //   },
-          // ),
-          SizedBox(
-            height: 20,
+          NavigateBackIcon(
+            title: 'Add league',
+            onPressed: () {
+              AppRouter.navigateTo(context, AppRouter.leagues);
+            },
           ),
-          AddLeagueBody(),
+          const SizedBox(
+            height: 10,
+          ),
+          const AddLeagueBody(),
         ],
       ),
     );

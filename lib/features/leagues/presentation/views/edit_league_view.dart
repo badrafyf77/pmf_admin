@@ -36,7 +36,7 @@ class EditEventView extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
-              EditEventBody(
+              EditLeagueBody(
                 event: event,
               ),
             ],

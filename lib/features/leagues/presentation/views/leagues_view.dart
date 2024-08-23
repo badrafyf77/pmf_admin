@@ -1,5 +1,6 @@
+import 'package:pmf_admin/core/config/router.dart';
 import 'package:pmf_admin/core/utils/customs/loading_indicator.dart';
-import 'package:pmf_admin/features/leagues/presentation/views/widgets/leagues_header.dart';
+import 'package:pmf_admin/core/utils/customs/header.dart';
 import 'package:pmf_admin/features/leagues/presentation/views/widgets/leagues_list.dart';
 import 'package:flutter/material.dart';
 
@@ -34,18 +35,19 @@ class _LeaguesViewState extends State<LeaguesView> {
   Widget build(BuildContext context) {
     return loading1
         ? loading2
-            ? const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
+            ? Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   children: [
-                    SizedBox(
-                      height: 10,
+                    
+                    Header(
+                      buttonTitle: "Add league",
+                      onPressedButton: () {
+                        AppRouter.navigateTo(context, AppRouter.addLeague);
+                      },
+                      onPressedRefresh: () {},
                     ),
-                    LeaguesHeader(),
-                    SizedBox(
-                      height: 12,
-                    ),
-                    LeaguesList(),
+                    const LeaguesList(),
                   ],
                 ),
               )
