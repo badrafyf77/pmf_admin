@@ -69,7 +69,7 @@ class AppDrawerState extends State<AppDrawer> {
         // GoRouter.of(context).go(AppRouter.activities);
         break;
       case 4:
-        GoRouter.of(context).go(AppRouter.players);
+        GoRouter.of(context).go(AppRouter.users);
         break;
       case 5:
         // GoRouter.of(context).go(AppRouter.messages);

@@ -1,6 +1,10 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pmf_admin/core/utils/service_locator.dart';
 import 'package:pmf_admin/features/leagues/data/model/league_model.dart';
 import 'package:pmf_admin/core/utils/customs/dashboard_screen.dart';
 import 'package:pmf_admin/features/auth/presentation/views/sign_in_view.dart';
+import 'package:pmf_admin/features/leagues/data/repo/league_repo_implementation.dart';
+import 'package:pmf_admin/features/leagues/presentation/manager/cubit/leagues_cubit.dart';
 import 'package:pmf_admin/features/leagues/presentation/views/add_league_view.dart';
 import 'package:pmf_admin/features/leagues/presentation/views/edit_league_view.dart';
 import 'package:pmf_admin/features/leagues/presentation/views/league_matches_view.dart';
@@ -9,23 +13,9 @@ import 'package:pmf_admin/features/leagues/presentation/views/leagues_view.dart'
 import 'package:pmf_admin/features/home/presentation/view/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pmf_admin/features/players/presentation/views/players_view.dart';
-
-CustomTransitionPage buildPageWithDefaultTransition<T>({
-  required BuildContext context,
-  required GoRouterState state,
-  required Widget child,
-}) {
-  return CustomTransitionPage<T>(
-    key: state.pageKey,
-    child: child,
-    transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-        FadeTransition(
-      opacity: CurveTween(curve: Curves.easeInOutCirc).animate(animation),
-      child: child,
-    ),
-  );
-}
+import 'package:pmf_admin/features/users/data/repo/users_repo_implementation.dart';
+import 'package:pmf_admin/features/users/presentation/manager/get%20users%20cubit/get_users_cubit.dart';
+import 'package:pmf_admin/features/users/presentation/views/users_view.dart';
 
 class AppRouter {
   static const signIn = "/k";
@@ -35,16 +25,14 @@ class AppRouter {
   static const leagueTable = '/league-table';
   static const leagueMatches = '/league-matches';
   static const editEvent = '/editEvent';
-  static const players = '/players';
+  static const users = '/users';
 
   static final router = GoRouter(
     routes: [
       GoRoute(
         path: signIn,
-        pageBuilder: (context, state) => buildPageWithDefaultTransition<void>(
-          context: context,
-          state: state,
-          child: const SignInView(),
+        pageBuilder: (context, state) => const NoTransitionPage(
+          child: SignInView(),
         ),
       ),
       ShellRoute(
@@ -54,29 +42,34 @@ class AppRouter {
         routes: [
           GoRoute(
             path: home,
-            pageBuilder: (context, state) =>
-                buildPageWithDefaultTransition<void>(
-              context: context,
-              state: state,
-              child: const HomeView(),
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: HomeView(),
             ),
           ),
           GoRoute(
             path: leagues,
-            pageBuilder: (context, state) =>
-                buildPageWithDefaultTransition<void>(
-              context: context,
-              state: state,
-              child: const LeaguesView(),
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: LeaguesView(),
             ),
           ),
           GoRoute(
             path: addLeague,
-            pageBuilder: (context, state) =>
-                buildPageWithDefaultTransition<void>(
-              context: context,
-              state: state,
-              child: const AddLeagueView(),
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: MultiBlocProvider(
+                providers: [
+                  BlocProvider(
+                    create: (context) => GetUsersCubit(
+                      getIt.get<UsersRepoImplementation>(),
+                    )..getUsers(),
+                  ),
+                  BlocProvider(
+                    create: (context) => LeaguesCubit(
+                      getIt.get<LeaguesRepoImplementation>(),
+                    ),
+                  ),
+                ],
+                child: const AddLeagueView(),
+              ),
             ),
           ),
           GoRoute(
@@ -95,9 +88,7 @@ class AppRouter {
             path: editEvent,
             pageBuilder: (context, state) {
               League event = state.extra as League;
-              return buildPageWithDefaultTransition<void>(
-                context: context,
-                state: state,
+              return NoTransitionPage(
                 child: EditEventView(
                   event: event,
                 ),
@@ -105,12 +96,14 @@ class AppRouter {
             },
           ),
           GoRoute(
-            path: players,
-            pageBuilder: (context, state) =>
-                buildPageWithDefaultTransition<void>(
-              context: context,
-              state: state,
-              child: const PlayersView(),
+            path: users,
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: BlocProvider(
+                create: (context) => GetUsersCubit(
+                  getIt.get<UsersRepoImplementation>(),
+                )..getUsers(),
+                child: const UsersView(),
+              ),
             ),
           ),
         ],

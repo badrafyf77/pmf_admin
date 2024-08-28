@@ -15,7 +15,6 @@ class LeaguesList extends StatelessWidget {
       title: 'jsjjsws',
       downloadUrl: 'downloadUrl',
       startDate: Timestamp.now(),
-      players: [],
     );
     List<League> fakeLeagueList = [l1, l1];
     return Expanded(

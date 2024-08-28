@@ -4,12 +4,15 @@ import 'package:pmf_admin/core/utils/colors.dart';
 import 'package:pmf_admin/core/utils/customs/button.dart';
 import 'package:pmf_admin/core/utils/customs/date_time_picker.dart';
 import 'package:pmf_admin/core/utils/customs/drop_down_field.dart';
+import 'package:pmf_admin/core/utils/customs/loading_indicator.dart';
 import 'package:pmf_admin/core/utils/customs/text_field.dart';
 import 'package:pmf_admin/core/utils/styles.dart';
-import 'package:pmf_admin/features/leagues/presentation/manager/add%20event%20bloc/add_event_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pmf_admin/features/leagues/presentation/manager/cubit/leagues_cubit.dart';
+import 'package:pmf_admin/features/users/data/models/users_model.dart';
+import 'package:pmf_admin/features/users/presentation/manager/get%20users%20cubit/get_users_cubit.dart';
 
 class AddLeagueBody extends StatefulWidget {
   const AddLeagueBody({
@@ -25,11 +28,13 @@ class _AddLeagueBodyState extends State<AddLeagueBody> {
   TextEditingController descriptionController = TextEditingController();
   TextEditingController placeController = TextEditingController();
 
-  DateTime date = DateTime.now();
+  DateTime startDate = DateTime.now();
 
   XFile? image;
 
   GlobalKey<FormState> formKey = GlobalKey();
+
+  List<UserInformation> selectedUsers = [];
 
   @override
   void dispose() {
@@ -41,11 +46,6 @@ class _AddLeagueBodyState extends State<AddLeagueBody> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> fakePlayers = [
-      'Afyf Badreddine',
-      'Yassine Chafik',
-      'Younesse Lamtti',
-    ];
     return Form(
       key: formKey,
       child: Expanded(
@@ -106,12 +106,12 @@ class _AddLeagueBodyState extends State<AddLeagueBody> {
                                   height: 5,
                                 ),
                                 CustomDateAndTimePicker(
-                                  date: date,
+                                  date: startDate,
                                   onPressed: () async {
                                     final result =
                                         await showBoardDateTimePicker(
                                       context: context,
-                                      initialDate: date,
+                                      initialDate: startDate,
                                       pickerType: DateTimePickerType.datetime,
                                       options: const BoardDateTimeOptions(
                                         startDayOfWeek: DateTime.sunday,
@@ -120,7 +120,7 @@ class _AddLeagueBodyState extends State<AddLeagueBody> {
                                       onResult: (val) {},
                                     );
                                     if (result != null) {
-                                      setState(() => date = result);
+                                      setState(() => startDate = result);
                                     }
                                   },
                                 ),
@@ -132,60 +132,95 @@ class _AddLeagueBodyState extends State<AddLeagueBody> {
                       const SizedBox(
                         height: 15,
                       ),
-                      if (fakePlayers.isNotEmpty)
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                      BlocBuilder<GetUsersCubit, GetUsersState>(
+                        builder: (context, state) {
+                          if (state is GetUsersFailure) {
+                            return IconButton(
+                              onPressed: () {
+                                BlocProvider.of<GetUsersCubit>(context)
+                                    .getUsers();
+                              },
+                              icon: const Icon(Icons.refresh),
+                            );
+                          }
+                          if (state is GetUsersSuccess) {
+                            List<String> items = [];
+                            for (var element in state.usersList) {
+                              items.add(element.displayName);
+                            }
+                            return Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Column(
                                   children: [
-                                    Text(
-                                      'Add Players',
-                                      style: Styles.normal18,
-                                    ),
-                                    SizedBox(
-                                      width: 200,
-                                      child: MyDropDownField(
-                                        onChanged: (onChanged) {},
-                                        items: fakePlayers,
-                                        initialValue: fakePlayers[0],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 15),
-                                Container(
-                                  height: 2,
-                                  color: Colors.grey,
-                                ),
-                                const SizedBox(height: 15),
-                                ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: fakePlayers.length,
-                                  itemBuilder: (context, index) {
-                                    return Row(
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text('${(index + 1)}-'),
-                                        const SizedBox(width: 5),
                                         Text(
-                                          fakePlayers[index],
-                                          style: Styles.normal16,
+                                          'Add Players',
+                                          style: Styles.normal18,
+                                        ),
+                                        SizedBox(
+                                          width: 200,
+                                          child: MyDropDownField(
+                                            onChanged: (user) {
+                                              if (user != null) {
+                                                int index = items.indexOf(user);
+                                                setState(() {
+                                                  selectedUsers.add(
+                                                      state.usersList[index]);
+                                                });
+                                              }
+                                            },
+                                            items: items,
+                                            initialValue: items[0],
+                                          ),
                                         ),
                                       ],
-                                    );
-                                  },
+                                    ),
+                                    const SizedBox(height: 15),
+                                    Container(
+                                      height: 2,
+                                      color: Colors.grey,
+                                    ),
+                                    const SizedBox(height: 15),
+                                    selectedUsers.isEmpty
+                                        ? Text(
+                                            "No player selected",
+                                            style: Styles.normal16
+                                                .copyWith(color: Colors.grey),
+                                          )
+                                        : ListView.builder(
+                                            shrinkWrap: true,
+                                            itemCount: items.length,
+                                            itemBuilder: (context, index) {
+                                              return Row(
+                                                children: [
+                                                  Text('${(index + 1)}-'),
+                                                  const SizedBox(width: 5),
+                                                  Text(
+                                                    items[index],
+                                                    style: Styles.normal16,
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
+                              ),
+                            );
+                          }
+                          return const Center(
+                            child: CustomLoadingIndicator(),
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -268,14 +303,11 @@ class _AddLeagueBodyState extends State<AddLeagueBody> {
                     CustomButton(
                       onPressed: () {
                         if (formKey.currentState!.validate()) {
-                          BlocProvider.of<AddEventBloc>(context).add(
-                            AddEvent(
-                              title: titleController.text,
-                              description: descriptionController.text,
-                              place: placeController.text,
-                              date: date,
-                              image: image,
-                            ),
+                          BlocProvider.of<LeaguesCubit>(context).addLeague(
+                            titleController.text,
+                            startDate,
+                            selectedUsers,
+                            image,
                           );
                           setState(() {
                             titleController.clear();

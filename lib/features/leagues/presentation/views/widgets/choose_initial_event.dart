@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:pmf_admin/features/leagues/data/model/league_model.dart';
 import 'package:pmf_admin/core/utils/customs/drop_down_field.dart';
 import 'package:pmf_admin/core/utils/styles.dart';
-import 'package:pmf_admin/features/leagues/presentation/manager/set%20initial%20event%20bloc/set_initial_event_bloc.dart';
 
 class ChooseInitialEvent extends StatefulWidget {
   const ChooseInitialEvent({
@@ -52,14 +49,6 @@ class _ChooseInitialEventState extends State<ChooseInitialEvent> {
               ? MyDropDownField(
                   initialValue: widget.initialEvent.title,
                   onChanged: (value) {
-                    if (value != null) {
-                      int index = items.indexOf(value);
-                      BlocProvider.of<SetInitialEventBloc>(context).add(
-                        SetInitialEvent(
-                          event: widget.eventsList[index],
-                        ),
-                      );
-                    }
                   },
                   items: items,
                 )

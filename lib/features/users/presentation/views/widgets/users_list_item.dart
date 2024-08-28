@@ -5,9 +5,12 @@ import 'package:pmf_admin/core/utils/customs/button.dart';
 import 'package:pmf_admin/core/utils/customs/cashed_network_image.dart';
 import 'package:pmf_admin/core/utils/customs/manage_buttons.dart';
 import 'package:pmf_admin/core/utils/styles.dart';
+import 'package:pmf_admin/features/users/data/models/users_model.dart';
 
-class PlayerItem extends StatelessWidget {
-  const PlayerItem({super.key});
+class UserItem extends StatelessWidget {
+  const UserItem({super.key, required this.userInformation});
+
+  final UserInformation userInformation;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +43,7 @@ class PlayerItem extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        "Afyf Badreddine",
+                        userInformation.displayName,
                         style: Styles.normal24,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,

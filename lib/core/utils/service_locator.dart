@@ -2,9 +2,9 @@ import 'package:pmf_admin/core/utils/services/fireauth_service.dart';
 import 'package:pmf_admin/core/utils/services/firestorage_service.dart';
 import 'package:pmf_admin/core/utils/services/firestore_service.dart';
 import 'package:pmf_admin/features/auth/data/repo/auth_repo_implementation.dart';
-import 'package:pmf_admin/features/leagues/data/repo/league_repo_implementation.dart';
-import 'package:pmf_admin/features/home/data/repo/home_repo_implementation.dart';
 import 'package:get_it/get_it.dart';
+import 'package:pmf_admin/features/leagues/data/repo/league_repo_implementation.dart';
+import 'package:pmf_admin/features/users/data/repo/users_repo_implementation.dart';
 
 final getIt = GetIt.instance;
 
@@ -23,15 +23,16 @@ void setupServiceLocator() {
       getIt.get<FireauthService>(),
     ),
   );
-  getIt.registerSingleton<EventsRepoImplementation>(
-    EventsRepoImplementation(
+  getIt.registerSingleton<LeaguesRepoImplementation>(
+    LeaguesRepoImplementation(
       getIt.get<FirestoreService>(),
       getIt.get<FirestorageService>(),
     ),
   );
-  getIt.registerSingleton<HomeRepoImplementation>(
-    HomeRepoImplementation(
+  getIt.registerSingleton<UsersRepoImplementation>(
+    UsersRepoImplementation(
       getIt.get<FirestoreService>(),
     ),
   );
+
 }
