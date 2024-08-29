@@ -19,6 +19,16 @@ class FirestoreService {
     return usersList;
   }
 
+  Future<List<League>> getLeagues() async {
+    List<League> leaguesList = [];
+    await leagues.orderBy('startDate', descending: true).get().then((league) {
+      for (var doc in league.docs) {
+        leaguesList.add(League.fromJson(doc));
+      }
+    });
+    return leaguesList;
+  }
+  
   Future<void> addLeague(League league, List<UserInformation> usersList) async {
     await leagues.doc(league.id).set(league.toJson());
     for (var element in usersList) {
@@ -34,19 +44,13 @@ class FirestoreService {
         goalDef: 0,
         pts: 0,
       );
-      await leagues.doc(league.id).collection("players").doc(p.id).set(p.toJson());
+      await leagues
+          .doc(league.id)
+          .collection("players")
+          .doc(p.id)
+          .set(p.toJson());
     }
   }
-
-  // Future<List<League>> getEvents() async {
-  //   List<League> eventsList = [];
-  //   await events.orderBy('date', descending: true).get().then((event) {
-  //     for (var doc in event.docs) {
-  //       eventsList.add(League.fromJson(doc));
-  //     }
-  //   });
-  //   return eventsList;
-  // }
 
   // Future<void> updateEvent(League event) async {
   //   await events.doc(event.id).update(event.toJson());

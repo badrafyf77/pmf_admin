@@ -13,3 +13,9 @@ final class LeaguesFailure extends LeaguesState {
 
   LeaguesFailure({required this.err});
 }
+
+final class GetLeaguesSuccess extends LeaguesState {
+  final List<League> leaguesList;
+
+  GetLeaguesSuccess({required this.leaguesList});
+}

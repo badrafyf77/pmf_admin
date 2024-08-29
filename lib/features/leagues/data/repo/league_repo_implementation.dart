@@ -34,6 +34,8 @@ class LeaguesRepoImplementation implements LeaguesRepo {
         title: title,
         downloadUrl: downloadUrl,
         startDate: Timestamp.fromDate(startDate),
+        players: players.length,
+        currentFixture: 0,
       );
       await _firestoreService.addLeague(event, players);
       return right(unit);
@@ -43,6 +45,19 @@ class LeaguesRepoImplementation implements LeaguesRepo {
       }
       return left(FirestoreFailure(
           errMessage: 'il y a une erreur, veuillez réessayer'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<League>>> getLeagues() async {
+    try {
+      var leaguesList = await _firestoreService.getLeagues();
+      return right(leaguesList);
+    } catch (e) {
+      if (e is FirebaseException) {
+        return left(FirestoreFailure.fromFirestoreFailure(e));
+      }
+      return left(FirestoreFailure(errMessage: e.toString()));
     }
   }
 

@@ -1,5 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:pmf_admin/features/leagues/data/model/league_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pmf_admin/core/utils/customs/header.dart';
+import 'package:pmf_admin/core/utils/customs/loading_indicator.dart';
+import 'package:pmf_admin/features/leagues/presentation/manager/cubit/leagues_cubit.dart';
 import 'package:pmf_admin/features/leagues/presentation/views/widgets/league_item.dart';
 import 'package:flutter/material.dart';
 
@@ -10,32 +12,40 @@ class LeaguesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    League l1 = League(
-      id: 'kns',
-      title: 'jsjjsws',
-      downloadUrl: 'downloadUrl',
-      startDate: Timestamp.now(),
-    );
-    List<League> fakeLeagueList = [l1, l1];
-    return Expanded(
-      child: ScrollConfiguration(
-        behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-        child: ListView.builder(
-          itemCount: fakeLeagueList.length,
-          itemBuilder: (context, index) {
-            return Column(
-              children: [
-                LeagueItem(
-                  league: fakeLeagueList[index],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-              ],
-            );
-          },
-        ),
-      ),
+    return BlocBuilder<LeaguesCubit, LeaguesState>(
+      builder: (context, state) {
+        if (state is LeaguesFailure) {
+          return RefreshIcon(
+            onPressed: () {
+              BlocProvider.of<LeaguesCubit>(context).getLeagues();
+            },
+          );
+        }
+        if (state is GetLeaguesSuccess) {
+          return Expanded(
+            child: ScrollConfiguration(
+              behavior:
+                  ScrollConfiguration.of(context).copyWith(scrollbars: false),
+              child: ListView.builder(
+                itemCount: state.leaguesList.length,
+                itemBuilder: (context, index) {
+                  return Column(
+                    children: [
+                      LeagueItem(
+                        league: state.leaguesList[index],
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          );
+        }
+        return const CustomLoadingIndicator();
+      },
     );
   }
 }

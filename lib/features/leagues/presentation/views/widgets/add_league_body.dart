@@ -6,6 +6,7 @@ import 'package:pmf_admin/core/utils/customs/date_time_picker.dart';
 import 'package:pmf_admin/core/utils/customs/drop_down_field.dart';
 import 'package:pmf_admin/core/utils/customs/loading_indicator.dart';
 import 'package:pmf_admin/core/utils/customs/text_field.dart';
+import 'package:pmf_admin/core/utils/helpers/show_toast.dart';
 import 'package:pmf_admin/core/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -162,7 +163,7 @@ class _AddLeagueBodyState extends State<AddLeagueBody> {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          'Add Players',
+                                          'Add Players (${selectedUsers.length}/20)',
                                           style: Styles.normal18,
                                         ),
                                         SizedBox(
@@ -172,8 +173,19 @@ class _AddLeagueBodyState extends State<AddLeagueBody> {
                                               if (user != null) {
                                                 int index = items.indexOf(user);
                                                 setState(() {
-                                                  selectedUsers.add(
-                                                      state.usersList[index]);
+                                                  if (selectedUsers.length ==
+                                                      20) {
+                                                    myShowToastError(context,
+                                                        "Max is 20 players");
+                                                  } else if (selectedUsers
+                                                      .contains(state
+                                                          .usersList[index])) {
+                                                    myShowToastError(context,
+                                                        "Player already exist");
+                                                  } else {
+                                                    selectedUsers.add(
+                                                        state.usersList[index]);
+                                                  }
                                                 });
                                               }
                                             },
@@ -197,14 +209,15 @@ class _AddLeagueBodyState extends State<AddLeagueBody> {
                                           )
                                         : ListView.builder(
                                             shrinkWrap: true,
-                                            itemCount: items.length,
+                                            itemCount: selectedUsers.length,
                                             itemBuilder: (context, index) {
                                               return Row(
                                                 children: [
                                                   Text('${(index + 1)}-'),
                                                   const SizedBox(width: 5),
                                                   Text(
-                                                    items[index],
+                                                    selectedUsers[index]
+                                                        .displayName,
                                                     style: Styles.normal16,
                                                   ),
                                                 ],

@@ -46,7 +46,7 @@ class LeagueItem extends StatelessWidget {
                       child: SizedBox(
                         height: 40,
                         child: Text(
-                          "Serie 1",
+                          league.title,
                           style: Styles.normal30,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
@@ -66,7 +66,7 @@ class LeagueItem extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                ' current fixture: 2',
+                                ' current fixture: ${league.currentFixture}',
                                 style: Styles.normal14,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
@@ -84,7 +84,7 @@ class LeagueItem extends StatelessWidget {
                                   ),
                                   Expanded(
                                     child: Text(
-                                      '20 players',
+                                      '${league.players} players',
                                       style: Styles.normal12,
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1,
@@ -104,7 +104,7 @@ class LeagueItem extends StatelessWidget {
                                     width: 4,
                                   ),
                                   Text(
-                                    BoardDateFormat('HH:mm a')
+                                    BoardDateFormat('dd/MM/yyyy HH:mm a')
                                         .format(league.startDate.toDate()),
                                     style: Styles.normal12,
                                   ),

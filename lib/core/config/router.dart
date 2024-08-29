@@ -48,8 +48,13 @@ class AppRouter {
           ),
           GoRoute(
             path: leagues,
-            pageBuilder: (context, state) => const NoTransitionPage(
-              child: LeaguesView(),
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: BlocProvider(
+                create: (context) => LeaguesCubit(
+                  getIt.get<LeaguesRepoImplementation>(),
+                )..getLeagues(),
+                child: const LeaguesView(),
+              ),
             ),
           ),
           GoRoute(
