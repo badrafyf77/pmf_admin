@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:pmf_admin/core/utils/models/fixture_model.dart';
 import 'package:pmf_admin/core/utils/models/player_model.dart';
 import 'package:pmf_admin/features/leagues/data/model/league_model.dart';
 import 'package:pmf_admin/features/users/data/models/users_model.dart';
@@ -28,7 +29,20 @@ class FirestoreService {
     });
     return leaguesList;
   }
-  
+
+  Future<League> getLeague(String id) async {
+    dynamic data;
+    League league;
+    await leagues
+        .doc(id)
+        .get()
+        .then<dynamic>((DocumentSnapshot snapshot) async {
+      data = snapshot.data();
+    });
+    league = League.fromJson(data);
+    return league;
+  }
+
   Future<void> addLeague(League league, List<UserInformation> usersList) async {
     await leagues.doc(league.id).set(league.toJson());
     for (var element in usersList) {
@@ -52,74 +66,37 @@ class FirestoreService {
     }
   }
 
-  // Future<void> updateEvent(League event) async {
-  //   await events.doc(event.id).update(event.toJson());
-  // }
+  Future<List<Player>> getPlayers(League league) async {
+    List<Player> playersList = [];
 
-  // Future<void> deleteEvent(String id) async {
-  //   await events.doc(id).delete();
-  // }
+    var snapshot = await leagues.doc(league.id).collection('players').get();
 
-  // Future<void> setInitialEvent(League event) async {
-  //   await initialEvent.doc('Initial_event').set(event.toJson());
-  // }
+    for (var doc in snapshot.docs) {
+      playersList.add(Player.fromJson(doc.data()));
+    }
 
-  // Future<League> getInitialEvent() async {
-  //   dynamic data;
-  //   League event;
-  //   await initialEvent
-  //       .doc('Initial_event')
-  //       .get()
-  //       .then<dynamic>((DocumentSnapshot snapshot) async {
-  //     data = snapshot.data();
-  //   });
-  //   event = League.fromJson(data);
-  //   return event;
-  // }
+    return playersList;
+  }
 
-  // Future<List> getVisitsList(int month, int year) async {
-  //   String id = '$month-$year';
-  //   List v = [];
-  //   var doc = await visits.doc(id).get();
-  //   if (doc.exists) {
-  //     await visits.doc(id).get().then((value) async {
-  //       final docs = value.data()!;
-  //       final data = docs as Map<String, dynamic>;
-  //       v = data['visits'] as List;
-  //     });
-  //     return v;
-  //   }
-  //   return [];
-  // }
+  Future<void> stockRounds(
+      League league, Map<int, List<Fixture>> fixturesByRound) async {
+    for (var i = 0; i < fixturesByRound.length; i++) {
+      int roundNumber = fixturesByRound.keys.elementAt(i);
+      List<Fixture> fixturesList = fixturesByRound[roundNumber]!;
 
-  // Future<int> getMonthVisits() async {
-  //   int year = DateTime.now().year;
-  //   int month = DateTime.now().month;
-  //   String id = '$month-$year';
-  //   List v = [];
-  //   num x = 0;
-  //   var doc = await visits.doc(id).get();
-  //   if (doc.exists) {
-  //     await visits.doc(id).get().then((value) async {
-  //       final docs = value.data()!;
-  //       final data = docs as Map<String, dynamic>;
-  //       v = data['visits'] as List;
-  //     });
-  //     for (var i = 0; i < v.length; i++) {
-  //       x += v[i];
-  //     }
-  //     return x.toInt();
-  //   }
-  //   return 0;
-  // }
+      for (var j = 0; j < fixturesList.length; j++) {
+        Fixture fixture = fixturesList[j];
+        await leagues
+            .doc(league.id)
+            .collection("round-$roundNumber")
+            .doc('fixture-${fixture.homeName}-vs-${fixture.awayName}')
+            .set(fixture.toJson());
+      }
+    }
+    await changeCurrentRound(league, 1);
+  }
 
-  // Future<int> countEvents() async {
-  //   AggregateQuerySnapshot query = await events.count().get();
-  //   int i;
-  //   if (query.count != null) {
-  //     i = query.count!;
-  //     return i;
-  //   }
-  //   return 0;
-  // }
+  Future<void> changeCurrentRound(League league, int round) async {
+    await leagues.doc(league.id).update({'currentRound': round});
+  }
 }

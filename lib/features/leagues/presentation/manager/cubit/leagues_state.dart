@@ -19,3 +19,9 @@ final class GetLeaguesSuccess extends LeaguesState {
 
   GetLeaguesSuccess({required this.leaguesList});
 }
+
+final class GenerateMatchesSuccess extends LeaguesState {
+  final League league;
+
+  GenerateMatchesSuccess({required this.league});
+}

@@ -5,16 +5,18 @@ class League {
   final String title;
   final String downloadUrl;
   final Timestamp startDate;
-  final int players;
-  final int currentFixture;
+  final int playersNumbers;
+  final int totalPlayers;
+  final int currentRound;
 
   League({
     required this.id,
     required this.title,
     required this.downloadUrl,
     required this.startDate,
-    required this.players,
-    required this.currentFixture,
+    required this.playersNumbers,
+    required this.totalPlayers,
+    required this.currentRound,
   });
 
   League.fromJson(json)
@@ -23,8 +25,9 @@ class League {
           title: json['title'] as String,
           downloadUrl: json['downloadUrl'] as String,
           startDate: json['startDate'] as Timestamp,
-          players: json['players'] as int,
-          currentFixture: json['currentFixture'] as int,
+          playersNumbers: json['playersNumbers'] as int,
+          totalPlayers: json['totalPlayers'] as int,
+          currentRound: json['currentRound'] as int,
         );
 
   Map<String, dynamic> toJson() {
@@ -33,8 +36,9 @@ class League {
       'title': title,
       'downloadUrl': downloadUrl,
       'startDate': startDate,
-      'players': players,
-      'currentFixture': currentFixture,
+      'playersNumbers': playersNumbers,
+      'totalPlayers': totalPlayers,
+      'currentRound': currentRound,
     };
   }
 }

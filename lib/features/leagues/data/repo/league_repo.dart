@@ -7,6 +7,6 @@ import 'package:pmf_admin/features/users/data/models/users_model.dart';
 abstract class LeaguesRepo {
   Future<Either<Failure, List<League>>> getLeagues();
   Future<Either<Failure, Unit>> addLeague(String title, DateTime startDate,
-      List<UserInformation> players, XFile? image);
-  
+      List<UserInformation> players, int totalPlayers, XFile? image);
+  Future<Either<Failure, League>> genarateMatches(League league);
 }

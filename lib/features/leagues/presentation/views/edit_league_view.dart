@@ -3,9 +3,9 @@ import 'package:pmf_admin/features/leagues/presentation/views/widgets/edit_event
 import 'package:flutter/material.dart';
 
 class EditEventView extends StatelessWidget {
-  const EditEventView({super.key, required this.event});
+  const EditEventView({super.key, required this.league});
 
-  final League event;
+  final League league;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class EditEventView extends StatelessWidget {
             height: 20,
           ),
           EditLeagueBody(
-            event: event,
+            event: league,
           ),
         ],
       ),

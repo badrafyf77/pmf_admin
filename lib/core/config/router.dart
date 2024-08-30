@@ -79,23 +79,38 @@ class AppRouter {
           ),
           GoRoute(
             path: leagueTable,
-            pageBuilder: (context, state) => const NoTransitionPage(
-              child: LeagueTableView(),
-            ),
+            pageBuilder: (context, state) {
+              League league = state.extra as League;
+              return NoTransitionPage(
+                child: BlocProvider(
+                  create: (context) => LeaguesCubit(
+                    getIt.get<LeaguesRepoImplementation>(),
+                  ),
+                  child: LeagueTableView(
+                    league: league,
+                  ),
+                ),
+              );
+            },
           ),
           GoRoute(
             path: leagueMatches,
-            pageBuilder: (context, state) => const NoTransitionPage(
-              child: LeagueMatchesView(),
-            ),
+            pageBuilder: (context, state) {
+              League league = state.extra as League;
+              return NoTransitionPage(
+                child: LeagueMatchesView(
+                  league: league,
+                ),
+              );
+            },
           ),
           GoRoute(
             path: editEvent,
             pageBuilder: (context, state) {
-              League event = state.extra as League;
+              League league = state.extra as League;
               return NoTransitionPage(
                 child: EditEventView(
-                  event: event,
+                  league: league,
                 ),
               );
             },

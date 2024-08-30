@@ -11,9 +11,10 @@ class LeaguesCubit extends Cubit<LeaguesState> {
   LeaguesCubit(this._leaguesRepo) : super(LeaguesInitial());
 
   Future<void> addLeague(String title, DateTime startDate,
-      List<UserInformation> players, XFile? image) async {
+      List<UserInformation> players, int totalPlayers, XFile? image) async {
     emit(Leagueslaoding());
-    var result = await _leaguesRepo.addLeague(title, startDate, players, image);
+    var result = await _leaguesRepo.addLeague(
+        title, startDate, players, totalPlayers, image);
     result.fold((left) {
       emit(LeaguesFailure(err: left.errMessage));
     }, (right) {
@@ -28,6 +29,16 @@ class LeaguesCubit extends Cubit<LeaguesState> {
       emit(LeaguesFailure(err: left.errMessage));
     }, (right) {
       emit(GetLeaguesSuccess(leaguesList: right));
+    });
+  }
+
+  Future<void> generateMatches(League league) async {
+    emit(Leagueslaoding());
+    var result = await _leaguesRepo.genarateMatches(league);
+    result.fold((left) {
+      emit(LeaguesFailure(err: left.errMessage));
+    }, (right) {
+      emit(GenerateMatchesSuccess(league: right));
     });
   }
 }

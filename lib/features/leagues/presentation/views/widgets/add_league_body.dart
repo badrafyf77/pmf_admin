@@ -7,6 +7,7 @@ import 'package:pmf_admin/core/utils/customs/drop_down_field.dart';
 import 'package:pmf_admin/core/utils/customs/loading_indicator.dart';
 import 'package:pmf_admin/core/utils/customs/text_field.dart';
 import 'package:pmf_admin/core/utils/helpers/show_toast.dart';
+import 'package:pmf_admin/core/utils/helpers/validators.dart';
 import 'package:pmf_admin/core/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,8 +27,7 @@ class AddLeagueBody extends StatefulWidget {
 
 class _AddLeagueBodyState extends State<AddLeagueBody> {
   TextEditingController titleController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
-  TextEditingController placeController = TextEditingController();
+  TextEditingController totalPlayersController = TextEditingController();
 
   DateTime startDate = DateTime.now();
 
@@ -41,8 +41,7 @@ class _AddLeagueBodyState extends State<AddLeagueBody> {
   void dispose() {
     super.dispose();
     titleController.dispose();
-    descriptionController.dispose();
-    placeController.dispose();
+    totalPlayersController.dispose();
   }
 
   @override
@@ -94,6 +93,29 @@ class _AddLeagueBodyState extends State<AddLeagueBody> {
                                     return null;
                                   },
                                   hintText: 'Title',
+                                  width: constraints.maxWidth,
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  'Total Number of Players',
+                                  style: Styles.normal15,
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                MyTextField(
+                                  controller: totalPlayersController,
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Enter total players';
+                                    } else if (!isNumeric(value)) {
+                                      return 'Enter a valide total players';
+                                    }
+                                    return null;
+                                  },
+                                  hintText: 'Total players',
                                   width: constraints.maxWidth,
                                 ),
                                 const SizedBox(
@@ -320,12 +342,12 @@ class _AddLeagueBodyState extends State<AddLeagueBody> {
                             titleController.text,
                             startDate,
                             selectedUsers,
+                            20,
                             image,
                           );
                           setState(() {
                             titleController.clear();
-                            descriptionController.clear();
-                            placeController.clear();
+                            totalPlayersController.clear();
                             image = null;
                           });
                         }

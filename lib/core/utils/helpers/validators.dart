@@ -5,3 +5,9 @@ extension EmailValidator on String {
         .hasMatch(this);
   }
 }
+
+bool isNumeric(String s) {
+  RegExp regex = RegExp(r'^[0-9]+$');
+
+  return regex.hasMatch(s);
+}

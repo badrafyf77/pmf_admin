@@ -69,3 +69,7 @@ class FirestorageFailure extends Failure {
 class PickImageFailure extends Failure {
   PickImageFailure({required super.errMessage});
 }
+
+class CustomFailure extends Failure {
+  CustomFailure({required super.errMessage});
+}

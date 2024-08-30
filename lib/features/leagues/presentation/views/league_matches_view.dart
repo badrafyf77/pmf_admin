@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:pmf_admin/core/config/router.dart';
 import 'package:pmf_admin/core/utils/customs/navigate_back_iconbutton.dart';
-import 'package:pmf_admin/core/utils/styles.dart';
+import 'package:pmf_admin/features/leagues/data/model/league_model.dart';
+import 'package:pmf_admin/features/leagues/presentation/views/league_table_view.dart';
 import 'package:pmf_admin/features/leagues/presentation/views/widgets/bar.dart';
+import 'package:pmf_admin/features/leagues/presentation/views/widgets/league_image_and_info.dart';
 import 'package:pmf_admin/features/leagues/presentation/views/widgets/league_matches.dart';
 
 class LeagueMatchesView extends StatelessWidget {
-  const LeagueMatchesView({super.key});
+  const LeagueMatchesView({super.key, required this.league});
+
+  final League league;
 
   @override
   Widget build(BuildContext context) {
@@ -23,14 +27,18 @@ class LeagueMatchesView extends StatelessWidget {
                   AppRouter.navigateTo(context, AppRouter.leagues);
                 },
               ),
-              Text(
-                "Serie 1",
-                style: Styles.normal30,
-              ),
-              const LeagueBar(
-                isMatchesSelected: true,
-              ),
-              const LeagueMatches(),
+              LeagueImageAndInfo(league: league),
+              league.currentRound == 0
+                  ? GenerateMatches(league: league)
+                  : Column(
+                      children: [
+                        LeagueBar(
+                          league: league,
+                          isMatchesSelected: true,
+                        ),
+                        const LeagueMatches(),
+                      ],
+                    ),
             ],
           ),
         ),
