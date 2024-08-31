@@ -23,6 +23,10 @@ class LeaguesRepoImplementation implements LeaguesRepo {
   Future<Either<Failure, Unit>> addLeague(String title, DateTime startDate,
       List<UserInformation> players, int totalPlayers, XFile? image) async {
     try {
+      if (players.length > totalPlayers) {
+        return left(CustomFailure(
+            errMessage: 'You’ve passed the total player number.'));
+      }
       var id = const Uuid().v4();
       String downloadUrl;
       if (image != null) {
@@ -30,7 +34,7 @@ class LeaguesRepoImplementation implements LeaguesRepo {
         downloadUrl = await _firestorageService.uploadFile(
             selectedImagePath, _firestorageService.leaguesFolderName, title);
       } else {
-        return left(PickImageFailure(errMessage: 'choisir une image'));
+        return left(PickImageFailure(errMessage: 'choisir une image.'));
       }
       League event = League(
         id: id,
@@ -48,15 +52,28 @@ class LeaguesRepoImplementation implements LeaguesRepo {
         return left(FirestoreFailure.fromFirestoreFailure(e));
       }
       return left(FirestoreFailure(
-          errMessage: 'il y a une erreur, veuillez réessayer'));
+          errMessage: 'il y a une erreur, veuillez réessayer.'));
     }
   }
 
   @override
   Future<Either<Failure, List<League>>> getLeagues() async {
     try {
-      var leaguesList = await _firestoreService.getLeagues();
+      List<League> leaguesList = await _firestoreService.getLeagues();
       return right(leaguesList);
+    } catch (e) {
+      if (e is FirebaseException) {
+        return left(FirestoreFailure.fromFirestoreFailure(e));
+      }
+      return left(FirestoreFailure(errMessage: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Player>>> getPlayers(League league) async {
+    try {
+      var playersList = await _firestoreService.getPlayers(league);
+      return right(playersList);
     } catch (e) {
       if (e is FirebaseException) {
         return left(FirestoreFailure.fromFirestoreFailure(e));

@@ -185,7 +185,7 @@ class _AddLeagueBodyState extends State<AddLeagueBody> {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          'Add Players (${selectedUsers.length}/20)',
+                                          'Add Players (${selectedUsers.length})',
                                           style: Styles.normal18,
                                         ),
                                         SizedBox(
@@ -195,13 +195,8 @@ class _AddLeagueBodyState extends State<AddLeagueBody> {
                                               if (user != null) {
                                                 int index = items.indexOf(user);
                                                 setState(() {
-                                                  if (selectedUsers.length ==
-                                                      20) {
-                                                    myShowToastError(context,
-                                                        "Max is 20 players");
-                                                  } else if (selectedUsers
-                                                      .contains(state
-                                                          .usersList[index])) {
+                                                  if (selectedUsers.contains(
+                                                      state.usersList[index])) {
                                                     myShowToastError(context,
                                                         "Player already exist");
                                                   } else {
@@ -233,16 +228,15 @@ class _AddLeagueBodyState extends State<AddLeagueBody> {
                                             shrinkWrap: true,
                                             itemCount: selectedUsers.length,
                                             itemBuilder: (context, index) {
-                                              return Row(
-                                                children: [
-                                                  Text('${(index + 1)}-'),
-                                                  const SizedBox(width: 5),
-                                                  Text(
-                                                    selectedUsers[index]
-                                                        .displayName,
-                                                    style: Styles.normal16,
-                                                  ),
-                                                ],
+                                              return AddPlayerItem(
+                                                selectedUsers: selectedUsers,
+                                                index: index,
+                                                onPressed: () {
+                                                  setState(() {
+                                                    selectedUsers
+                                                        .removeAt(index);
+                                                  });
+                                                },
                                               );
                                             },
                                           ),
@@ -342,7 +336,7 @@ class _AddLeagueBodyState extends State<AddLeagueBody> {
                             titleController.text,
                             startDate,
                             selectedUsers,
-                            20,
+                            int.parse(totalPlayersController.text),
                             image,
                           );
                           setState(() {
@@ -362,6 +356,42 @@ class _AddLeagueBodyState extends State<AddLeagueBody> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class AddPlayerItem extends StatelessWidget {
+  const AddPlayerItem({
+    super.key,
+    required this.selectedUsers,
+    required this.index,
+    required this.onPressed,
+  });
+
+  final List<UserInformation> selectedUsers;
+  final int index;
+  final void Function() onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Text('${(index + 1)}-'),
+            const SizedBox(width: 5),
+            Text(
+              selectedUsers[index].displayName,
+              style: Styles.normal16,
+            ),
+          ],
+        ),
+        IconButton(
+          onPressed: onPressed,
+          icon: const Icon(Icons.delete),
+        ),
+      ],
     );
   }
 }

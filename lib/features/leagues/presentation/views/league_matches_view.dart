@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pmf_admin/core/config/router.dart';
 import 'package:pmf_admin/core/utils/customs/navigate_back_iconbutton.dart';
 import 'package:pmf_admin/features/leagues/data/model/league_model.dart';
-import 'package:pmf_admin/features/leagues/presentation/views/league_table_view.dart';
 import 'package:pmf_admin/features/leagues/presentation/views/widgets/bar.dart';
+import 'package:pmf_admin/features/leagues/presentation/views/widgets/generate_league_matches.dart';
 import 'package:pmf_admin/features/leagues/presentation/views/widgets/league_image_and_info.dart';
 import 'package:pmf_admin/features/leagues/presentation/views/widgets/league_matches.dart';
 

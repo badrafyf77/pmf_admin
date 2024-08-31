@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pmf_admin/core/utils/models/player_model.dart';
 import 'package:pmf_admin/features/leagues/data/model/league_model.dart';
 import 'package:pmf_admin/features/leagues/data/repo/league_repo.dart';
 import 'package:pmf_admin/features/users/data/models/users_model.dart';
@@ -29,6 +30,16 @@ class LeaguesCubit extends Cubit<LeaguesState> {
       emit(LeaguesFailure(err: left.errMessage));
     }, (right) {
       emit(GetLeaguesSuccess(leaguesList: right));
+    });
+  }
+
+  Future<void> getPlayers(League league) async {
+    emit(Leagueslaoding());
+    var result = await _leaguesRepo.getPlayers(league);
+    result.fold((left) {
+      emit(LeaguesFailure(err: left.errMessage));
+    }, (right) {
+      emit(GetPlayersSuccess(playersList: right));
     });
   }
 
