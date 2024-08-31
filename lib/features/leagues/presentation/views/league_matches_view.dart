@@ -14,33 +14,31 @@ class LeagueMatchesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: ScrollConfiguration(
-        behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: ListView(
-            children: [
-              NavigateBackIcon(
-                title: 'Manage league',
-                onPressed: () {
-                  AppRouter.navigateTo(context, AppRouter.leagues);
-                },
-              ),
-              LeagueImageAndInfo(league: league),
-              league.currentRound == 0
-                  ? GenerateMatches(league: league)
-                  : Column(
-                      children: [
-                        LeagueBar(
-                          league: league,
-                          isMatchesSelected: true,
-                        ),
-                        const LeagueMatches(),
-                      ],
-                    ),
-            ],
-          ),
+    return ScrollConfiguration(
+      behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: ListView(
+          children: [
+            NavigateBackIcon(
+              title: 'Manage league',
+              onPressed: () {
+                AppRouter.navigateTo(context, AppRouter.leagues);
+              },
+            ),
+            LeagueImageAndInfo(league: league),
+            league.currentRound == 0
+                ? GenerateMatches(league: league)
+                : Column(
+                    children: [
+                      LeagueBar(
+                        league: league,
+                        isMatchesSelected: true,
+                      ),
+                      const LeagueMatches(),
+                    ],
+                  ),
+          ],
         ),
       ),
     );

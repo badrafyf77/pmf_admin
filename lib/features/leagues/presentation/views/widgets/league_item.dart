@@ -51,7 +51,10 @@ class LeagueItem extends StatelessWidget {
                     ),
                     const SizedBox(width: 5),
                     EditButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        AppRouter.navigateToWithExtra(
+                            context, AppRouter.editLeague, league);
+                      },
                     ),
                     const SizedBox(width: 5),
                     DeleteButton(

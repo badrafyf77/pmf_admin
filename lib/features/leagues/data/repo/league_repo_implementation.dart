@@ -24,8 +24,13 @@ class LeaguesRepoImplementation implements LeaguesRepo {
       List<UserInformation> players, int totalPlayers, XFile? image) async {
     try {
       if (players.length > totalPlayers) {
-        return left(CustomFailure(
-            errMessage: 'You’ve passed the total player number.'));
+        return left(
+          CustomFailure(errMessage: 'You’ve passed the total player number.'),
+        );
+      } else if (players.length < totalPlayers) {
+        return left(
+          CustomFailure(errMessage: 'Players number is still incomplete.'),
+        );
       }
       var id = const Uuid().v4();
       String downloadUrl;
@@ -41,7 +46,6 @@ class LeaguesRepoImplementation implements LeaguesRepo {
         title: title,
         downloadUrl: downloadUrl,
         startDate: Timestamp.fromDate(startDate),
-        playersNumbers: players.length,
         totalPlayers: totalPlayers,
         currentRound: 0,
       );
@@ -86,10 +90,6 @@ class LeaguesRepoImplementation implements LeaguesRepo {
   Future<Either<Failure, League>> genarateMatches(League league) async {
     try {
       List<Player> playersList = await _firestoreService.getPlayers(league);
-      if (playersList.length < league.totalPlayers) {
-        return left(
-            CustomFailure(errMessage: "Players number is still incomplete."));
-      }
       List<Fixture> generatedFixtures = generateFixtures(playersList, true);
 
       generatedFixtures.sort((a, b) => a.round.compareTo(b.round));

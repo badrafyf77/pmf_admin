@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pmf_admin/features/leagues/presentation/manager/cubit/leagues_cubit.dart';
+import 'package:pmf_admin/features/leagues/presentation/views/widgets/add_player_item.dart';
 import 'package:pmf_admin/features/users/data/models/users_model.dart';
 import 'package:pmf_admin/features/users/presentation/manager/get%20users%20cubit/get_users_cubit.dart';
 
@@ -356,42 +357,6 @@ class _AddLeagueBodyState extends State<AddLeagueBody> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class AddPlayerItem extends StatelessWidget {
-  const AddPlayerItem({
-    super.key,
-    required this.selectedUsers,
-    required this.index,
-    required this.onPressed,
-  });
-
-  final List<UserInformation> selectedUsers;
-  final int index;
-  final void Function() onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          children: [
-            Text('${(index + 1)}-'),
-            const SizedBox(width: 5),
-            Text(
-              selectedUsers[index].displayName,
-              style: Styles.normal16,
-            ),
-          ],
-        ),
-        IconButton(
-          onPressed: onPressed,
-          icon: const Icon(Icons.delete),
-        ),
-      ],
     );
   }
 }

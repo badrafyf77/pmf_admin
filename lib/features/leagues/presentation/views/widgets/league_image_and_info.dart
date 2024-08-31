@@ -78,7 +78,7 @@ class LeagueInfo extends StatelessWidget {
                 ),
                 Expanded(
                   child: Text(
-                    '${league.playersNumbers}/${league.totalPlayers} players',
+                    '${league.totalPlayers} players',
                     style: Styles.normal12,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,

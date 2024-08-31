@@ -24,7 +24,7 @@ class AppRouter {
   static const addLeague = '/add-league';
   static const leagueTable = '/league-table';
   static const leagueMatches = '/league-matches';
-  static const editEvent = '/editEvent';
+  static const editLeague = '/edit-league';
   static const users = '/users';
 
   static final router = GoRouter(
@@ -105,12 +105,17 @@ class AppRouter {
             },
           ),
           GoRoute(
-            path: editEvent,
+            path: editLeague,
             pageBuilder: (context, state) {
               League league = state.extra as League;
               return NoTransitionPage(
-                child: EditEventView(
-                  league: league,
+                child: BlocProvider(
+                  create: (context) => LeaguesCubit(
+                    getIt.get<LeaguesRepoImplementation>(),
+                  )..getPlayers(league),
+                  child: EditLeagueView(
+                    league: league,
+                  ),
                 ),
               );
             },

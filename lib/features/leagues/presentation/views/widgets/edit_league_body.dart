@@ -1,4 +1,3 @@
-import 'package:pmf_admin/core/utils/customs/drop_down_field.dart';
 import 'package:pmf_admin/features/leagues/data/model/league_model.dart';
 import 'package:pmf_admin/core/utils/customs/text_field.dart';
 import 'package:pmf_admin/core/utils/styles.dart';
@@ -22,10 +21,8 @@ class EditLeagueBody extends StatefulWidget {
 
 class _EditLeagueBodyState extends State<EditLeagueBody> {
   TextEditingController titleController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
-  TextEditingController placeController = TextEditingController();
 
-  late DateTime date;
+  late DateTime startDate;
 
   XFile? image;
 
@@ -37,24 +34,17 @@ class _EditLeagueBodyState extends State<EditLeagueBody> {
   void initState() {
     super.initState();
     titleController.text = widget.event.title;
-    date = widget.event.startDate.toDate();
+    startDate = widget.event.startDate.toDate();
   }
 
   @override
   void dispose() {
     super.dispose();
     titleController.dispose();
-    descriptionController.dispose();
-    placeController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    List<String> fakePlayers = [
-      'Afyf Badreddine',
-      'Yassine Chafik',
-      'Younesse Lamtti',
-    ];
     return Form(
       key: formKey,
       child: Expanded(
@@ -115,12 +105,12 @@ class _EditLeagueBodyState extends State<EditLeagueBody> {
                                   height: 5,
                                 ),
                                 CustomDateAndTimePicker(
-                                  date: date,
+                                  date: startDate,
                                   onPressed: () async {
                                     final result =
                                         await showBoardDateTimePicker(
                                       context: context,
-                                      initialDate: date,
+                                      initialDate: startDate,
                                       pickerType: DateTimePickerType.datetime,
                                       options: const BoardDateTimeOptions(
                                         startDayOfWeek: DateTime.sunday,
@@ -129,7 +119,7 @@ class _EditLeagueBodyState extends State<EditLeagueBody> {
                                       onResult: (val) {},
                                     );
                                     if (result != null) {
-                                      setState(() => date = result);
+                                      setState(() => startDate = result);
                                     }
                                   },
                                 ),
@@ -138,63 +128,6 @@ class _EditLeagueBodyState extends State<EditLeagueBody> {
                           }),
                         ),
                       ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      if (fakePlayers.isNotEmpty)
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Add Players',
-                                      style: Styles.normal18,
-                                    ),
-                                    SizedBox(
-                                      width: 200,
-                                      child: MyDropDownField(
-                                        onChanged: (onChanged) {},
-                                        items: fakePlayers,
-                                        initialValue: fakePlayers[0],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 15),
-                                Container(
-                                  height: 2,
-                                  color: Colors.grey,
-                                ),
-                                const SizedBox(height: 15),
-                                ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: fakePlayers.length,
-                                  itemBuilder: (context, index) {
-                                    return Row(
-                                      children: [
-                                        Text('${(index + 1)}-'),
-                                        const SizedBox(width: 5),
-                                        Text(
-                                          fakePlayers[index],
-                                          style: Styles.normal16,
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
                     ],
                   ),
                 ),
@@ -321,13 +254,11 @@ class _EditLeagueBodyState extends State<EditLeagueBody> {
                           // );
                           setState(() {
                             titleController.clear();
-                            descriptionController.clear();
-                            placeController.clear();
                             image = null;
                           });
                         }
                       },
-                      title: "Add",
+                      title: "Edit",
                       backgroundColor: AppColors.kPrimaryColor,
                     ),
                   ],
