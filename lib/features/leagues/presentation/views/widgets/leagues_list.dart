@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pmf_admin/core/utils/customs/header.dart';
 import 'package:pmf_admin/core/utils/customs/loading_indicator.dart';
+import 'package:pmf_admin/core/utils/helpers/show_toast.dart';
 import 'package:pmf_admin/features/leagues/presentation/manager/cubit/leagues_cubit.dart';
 import 'package:pmf_admin/features/leagues/presentation/views/widgets/league_item.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,13 @@ class _LeaguesListState extends State<LeaguesList> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LeaguesCubit, LeaguesState>(
+    return BlocConsumer<LeaguesCubit, LeaguesState>(
+      listener: (context, state) {
+        if (state is LeaguesSuccess) {
+          BlocProvider.of<LeaguesCubit>(context).getLeagues();
+          myShowToastSuccess(context, "League deleted successfully!");
+        }
+      },
       builder: (context, state) {
         if (state is LeaguesFailure) {
           return RefreshIcon(

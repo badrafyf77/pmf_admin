@@ -70,6 +70,10 @@ class FirestoreService {
     await leagues.doc(league.id).update(league.toJson());
   }
 
+  Future<void> deleteLeague(League league) async {
+    await leagues.doc(league.id).delete();
+  }
+
   Future<List<Player>> getPlayers(League league) async {
     List<Player> playersList = [];
 

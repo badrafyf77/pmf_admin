@@ -35,6 +35,16 @@ class LeaguesCubit extends Cubit<LeaguesState> {
     });
   }
 
+  Future<void> deleteLeague(League league) async {
+    emit(Leagueslaoding());
+    var result = await _leaguesRepo.deleteLeague(league);
+    result.fold((left) {
+      emit(LeaguesFailure(err: left.errMessage));
+    }, (right) {
+      emit(LeaguesSuccess());
+    });
+  }
+
   Future<void> getLeagues() async {
     emit(Leagueslaoding());
     var result = await _leaguesRepo.getLeagues();

@@ -150,4 +150,17 @@ class LeaguesRepoImplementation implements LeaguesRepo {
       return left(FirestoreFailure(errMessage: e.toString()));
     }
   }
+  
+  @override
+  Future<Either<Failure, Unit>> deleteLeague(League league) async{
+    try {
+      await _firestoreService.deleteLeague(league);
+      return right(unit);
+    } catch (e) {
+      if (e is FirebaseException) {
+        return left(FirestoreFailure.fromFirestoreFailure(e));
+      }
+      return left(FirestoreFailure(errMessage: e.toString()));
+    }
+  }
 }
