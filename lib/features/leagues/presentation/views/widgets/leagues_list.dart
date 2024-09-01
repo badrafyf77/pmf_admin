@@ -5,10 +5,21 @@ import 'package:pmf_admin/features/leagues/presentation/manager/cubit/leagues_cu
 import 'package:pmf_admin/features/leagues/presentation/views/widgets/league_item.dart';
 import 'package:flutter/material.dart';
 
-class LeaguesList extends StatelessWidget {
+class LeaguesList extends StatefulWidget {
   const LeaguesList({
     super.key,
   });
+
+  @override
+  State<LeaguesList> createState() => _LeaguesListState();
+}
+
+class _LeaguesListState extends State<LeaguesList> {
+  @override
+  void initState() {
+    BlocProvider.of<LeaguesCubit>(context).getLeagues();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

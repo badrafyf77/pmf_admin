@@ -1,3 +1,5 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pmf_admin/core/utils/helpers/show_toast.dart';
 import 'package:pmf_admin/features/leagues/data/model/league_model.dart';
 import 'package:pmf_admin/core/utils/customs/text_field.dart';
 import 'package:pmf_admin/core/utils/styles.dart';
@@ -9,11 +11,12 @@ import 'package:pmf_admin/core/utils/customs/button.dart';
 import 'package:pmf_admin/core/utils/customs/cashed_network_image.dart';
 import 'package:pmf_admin/core/utils/customs/date_time_picker.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pmf_admin/features/leagues/presentation/manager/cubit/leagues_cubit.dart';
 
 class EditLeagueBody extends StatefulWidget {
-  const EditLeagueBody({super.key, required this.event});
+  const EditLeagueBody({super.key, required this.league});
 
-  final League event;
+  final League league;
 
   @override
   State<EditLeagueBody> createState() => _EditLeagueBodyState();
@@ -26,15 +29,15 @@ class _EditLeagueBodyState extends State<EditLeagueBody> {
 
   XFile? image;
 
-  bool oldImage = true;
+  bool isOldImage = true;
 
   GlobalKey<FormState> formKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
-    titleController.text = widget.event.title;
-    startDate = widget.event.startDate.toDate();
+    titleController.text = widget.league.title;
+    startDate = widget.league.startDate.toDate();
   }
 
   @override
@@ -154,11 +157,11 @@ class _EditLeagueBodyState extends State<EditLeagueBody> {
                                   'League picture',
                                   style: Styles.normal18,
                                 ),
-                                if (!oldImage)
+                                if (!isOldImage)
                                   IconButton(
                                     onPressed: () {
                                       setState(() {
-                                        oldImage = true;
+                                        isOldImage = true;
                                       });
                                     },
                                     icon: const Icon(Icons.rotate_left),
@@ -169,18 +172,18 @@ class _EditLeagueBodyState extends State<EditLeagueBody> {
                             const SizedBox(
                               height: 20,
                             ),
-                            (oldImage)
+                            (isOldImage)
                                 ? Column(
                                     children: [
                                       CustomCashedNetworkImage(
-                                        url: widget.event.downloadUrl,
+                                        url: widget.league.downloadUrl,
                                         height: 180,
                                         width: 250,
                                       ),
                                       IconButton(
                                         onPressed: () {
                                           setState(() {
-                                            oldImage = false;
+                                            isOldImage = false;
                                           });
                                         },
                                         icon: const Icon(Icons.delete),
@@ -242,16 +245,16 @@ class _EditLeagueBodyState extends State<EditLeagueBody> {
                     ),
                     CustomButton(
                       onPressed: () {
-                        if (formKey.currentState!.validate()) {
-                          // BlocProvider.of<AddEventBloc>(context).add(
-                          //   AddEvent(
-                          //     title: titleController.text,
-                          //     description: descriptionController.text,
-                          //     place: placeController.text,
-                          //     date: date,
-                          //     image: image,
-                          //   ),
-                          // );
+                        if (image == null && !isOldImage) {
+                          myShowToastError(context, "Select an image");
+                        } else if (formKey.currentState!.validate()) {
+                          BlocProvider.of<LeaguesCubit>(context).updateLeague(
+                            widget.league,
+                            titleController.text,
+                            startDate,
+                            isOldImage,
+                            image,
+                          );
                           setState(() {
                             titleController.clear();
                             image = null;

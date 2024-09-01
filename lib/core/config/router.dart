@@ -52,7 +52,7 @@ class AppRouter {
               child: BlocProvider(
                 create: (context) => LeaguesCubit(
                   getIt.get<LeaguesRepoImplementation>(),
-                )..getLeagues(),
+                ),
                 child: const LeaguesView(),
               ),
             ),
@@ -112,7 +112,7 @@ class AppRouter {
                 child: BlocProvider(
                   create: (context) => LeaguesCubit(
                     getIt.get<LeaguesRepoImplementation>(),
-                  )..getPlayers(league),
+                  ),
                   child: EditLeagueView(
                     league: league,
                   ),

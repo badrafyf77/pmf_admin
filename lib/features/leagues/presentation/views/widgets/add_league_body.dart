@@ -332,7 +332,9 @@ class _AddLeagueBodyState extends State<AddLeagueBody> {
                     ),
                     CustomButton(
                       onPressed: () {
-                        if (formKey.currentState!.validate()) {
+                        if (image == null) {
+                          myShowToastError(context, "Select an image");
+                        } else if (formKey.currentState!.validate()) {
                           BlocProvider.of<LeaguesCubit>(context).addLeague(
                             titleController.text,
                             startDate,

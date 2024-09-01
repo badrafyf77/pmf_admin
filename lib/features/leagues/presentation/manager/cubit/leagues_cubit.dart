@@ -23,6 +23,18 @@ class LeaguesCubit extends Cubit<LeaguesState> {
     });
   }
 
+  Future<void> updateLeague(League oldLeague, String newTitle,
+      DateTime startDate, bool isOldImage, XFile? image) async {
+    emit(Leagueslaoding());
+    var result = await _leaguesRepo.editLeague(
+        oldLeague, newTitle, startDate, isOldImage, image);
+    result.fold((left) {
+      emit(LeaguesFailure(err: left.errMessage));
+    }, (right) {
+      emit(LeaguesSuccess());
+    });
+  }
+
   Future<void> getLeagues() async {
     emit(Leagueslaoding());
     var result = await _leaguesRepo.getLeagues();

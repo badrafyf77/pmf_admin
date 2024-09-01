@@ -10,5 +10,6 @@ abstract class LeaguesRepo {
   Future<Either<Failure, List<Player>>> getPlayers(League league);
   Future<Either<Failure, Unit>> addLeague(String title, DateTime startDate,
       List<UserInformation> players, int totalPlayers, XFile? image);
+  Future<Either<Failure, Unit>> editLeague(League oldLeague, String newTitle, DateTime startDate, bool isOldImage, XFile? image);
   Future<Either<Failure, League>> genarateMatches(League league);
 }

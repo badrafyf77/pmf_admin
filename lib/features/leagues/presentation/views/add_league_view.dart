@@ -33,6 +33,7 @@ class AddLeagueView extends StatelessWidget {
               }
               if (state is LeaguesSuccess) {
                 myShowToastSuccess(context, "League added successfully!");
+                AppRouter.navigateTo(context, AppRouter.leagues);
               }
             },
             builder: (context, state) {

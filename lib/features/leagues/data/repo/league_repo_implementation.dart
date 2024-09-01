@@ -61,6 +61,44 @@ class LeaguesRepoImplementation implements LeaguesRepo {
   }
 
   @override
+  Future<Either<Failure, Unit>> editLeague(League oldLeague, String newTitle,
+      DateTime startDate, bool isOldImage, XFile? image) async {
+    try {
+      String downloadUrl;
+      if (!isOldImage) {
+        if (image != null) {
+          await _firestorageService.deleteFile(
+              _firestorageService.leaguesFolderName, oldLeague.title);
+          File selectedImagePath = File(image.path);
+          downloadUrl = await _firestorageService.uploadFile(selectedImagePath,
+              _firestorageService.leaguesFolderName, newTitle);
+        } else {
+          return left(PickImageFailure(errMessage: 'error'));
+        }
+      } else {
+        downloadUrl = await _firestorageService.updateFile(
+            oldLeague.title, _firestorageService.leaguesFolderName, newTitle);
+      }
+      League l = League(
+        id: oldLeague.id,
+        title: newTitle,
+        downloadUrl: downloadUrl,
+        startDate: Timestamp.fromDate(startDate),
+        totalPlayers: oldLeague.totalPlayers,
+        currentRound: oldLeague.currentRound,
+      );
+      await _firestoreService.updateLeague(l);
+      return right(unit);
+    } catch (e) {
+      if (e is FirebaseException) {
+        return left(FirestoreFailure.fromFirestoreFailure(e));
+      }
+      return left(FirestoreFailure(
+          errMessage: 'il y a une erreur, veuillez réessayer'));
+    }
+  }
+
+  @override
   Future<Either<Failure, List<League>>> getLeagues() async {
     try {
       List<League> leaguesList = await _firestoreService.getLeagues();
