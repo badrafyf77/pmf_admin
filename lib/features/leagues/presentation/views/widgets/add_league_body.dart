@@ -32,6 +32,8 @@ class _AddLeagueBodyState extends State<AddLeagueBody> {
 
   DateTime startDate = DateTime.now();
 
+  bool isHomeAndAway = true;
+
   XFile? image;
 
   GlobalKey<FormState> formKey = GlobalKey();
@@ -118,6 +120,26 @@ class _AddLeagueBodyState extends State<AddLeagueBody> {
                                   },
                                   hintText: 'Total players',
                                   width: constraints.maxWidth,
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                CategoryAndGenderRow(
+                                  text: 'Type',
+                                  firstText: 'Home And Away',
+                                  firstValue: isHomeAndAway,
+                                  onTapFirst: (selected) {
+                                    setState(() {
+                                      isHomeAndAway = !isHomeAndAway;
+                                    });
+                                  },
+                                  secondText: 'Home',
+                                  secondValue: !isHomeAndAway,
+                                  onTapSecond: (selected) {
+                                    setState(() {
+                                      isHomeAndAway = !isHomeAndAway;
+                                    });
+                                  },
                                 ),
                                 const SizedBox(
                                   height: 10,
@@ -340,6 +362,7 @@ class _AddLeagueBodyState extends State<AddLeagueBody> {
                             startDate,
                             selectedUsers,
                             int.parse(totalPlayersController.text),
+                            isHomeAndAway,
                             image,
                           );
                           setState(() {
@@ -358,6 +381,114 @@ class _AddLeagueBodyState extends State<AddLeagueBody> {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class CategoryAndGenderRow extends StatelessWidget {
+  const CategoryAndGenderRow({
+    super.key,
+    required this.text,
+    required this.firstText,
+    required this.firstValue,
+    required this.secondText,
+    required this.secondValue,
+    this.onTapFirst,
+    this.onTapSecond,
+  });
+
+  final String text;
+  final String firstText;
+  final bool firstValue;
+  final String secondText;
+  final bool secondValue;
+  final Function(bool?)? onTapFirst;
+  final Function(bool?)? onTapSecond;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          text,
+          style: Styles.normal14.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(
+          height: 5,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            DevisICheckBox(
+              text: firstText,
+              value: firstValue,
+              onTap: onTapFirst,
+            ),
+            const SizedBox(width: 2),
+            DevisICheckBox(
+              text: secondText,
+              value: secondValue,
+              onTap: onTapSecond,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class DevisICheckBox extends StatelessWidget {
+  const DevisICheckBox({
+    super.key,
+    this.width,
+    required this.text,
+    this.onTap,
+    required this.value,
+  });
+
+  final double? width;
+  final String text;
+  final Function(bool?)? onTap;
+  final bool value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 30,
+      width: width,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Theme.of(context).colorScheme.primary,
+        ),
+        borderRadius: BorderRadius.circular(25),
+      ),
+      child: Row(
+        children: [
+          const SizedBox(
+            width: 5,
+          ),
+          Checkbox(
+            value: value,
+            onChanged: onTap,
+            shape: const CircleBorder(),
+            side: BorderSide(color: Theme.of(context).colorScheme.primary),
+            checkColor: Theme.of(context).colorScheme.primary,
+          ),
+          Text(
+            text,
+            style: Styles.normal12.copyWith(
+              color: Theme.of(context).colorScheme.primary,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+        ],
       ),
     );
   }

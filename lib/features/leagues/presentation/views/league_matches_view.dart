@@ -35,7 +35,9 @@ class LeagueMatchesView extends StatelessWidget {
                         league: league,
                         isMatchesSelected: true,
                       ),
-                      const LeagueMatches(),
+                      LeagueMatches(
+                        league: league,
+                      ),
                     ],
                   ),
           ],

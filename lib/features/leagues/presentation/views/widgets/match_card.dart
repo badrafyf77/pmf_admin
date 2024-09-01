@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:pmf_admin/core/utils/colors.dart';
+import 'package:pmf_admin/core/utils/models/fixture_model.dart';
 import 'package:pmf_admin/features/leagues/presentation/views/widgets/card_item.dart';
 
-class MatchCard extends StatelessWidget {
-  const MatchCard({super.key});
+class FixtureCard extends StatelessWidget {
+  const FixtureCard({super.key, required this.fixture});
+
+  final Fixture fixture;
 
   @override
   Widget build(BuildContext context) {
@@ -19,20 +22,22 @@ class MatchCard extends StatelessWidget {
               color: AppColors.kPrimaryColor,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const Padding(
-              padding: EdgeInsets.all(6),
+            child: Padding(
+              padding: const EdgeInsets.all(6),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CardItem(
-                    playerName: "Afyf Badreddine",
-                    goals: 3,
-                    isWinner: true,
+                    playerName: fixture.homeName,
+                    goals: fixture.homeGoals,
+                    isWinner: fixture.homeGoals > fixture.awayGoals,
+                    isDraw: fixture.homeGoals == fixture.awayGoals,
                   ),
                   CardItem(
-                    playerName: "Younesse Lamtti",
-                    goals: 0,
-                    isWinner: false,
+                    playerName: fixture.awayName,
+                    goals: fixture.awayGoals,
+                    isWinner: fixture.awayGoals > fixture.homeGoals,
+                    isDraw: fixture.awayGoals == fixture.homeGoals,
                   ),
                 ],
               ),

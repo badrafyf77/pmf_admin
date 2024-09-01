@@ -20,8 +20,13 @@ class LeaguesRepoImplementation implements LeaguesRepo {
   LeaguesRepoImplementation(this._firestoreService, this._firestorageService);
 
   @override
-  Future<Either<Failure, Unit>> addLeague(String title, DateTime startDate,
-      List<UserInformation> players, int totalPlayers, XFile? image) async {
+  Future<Either<Failure, Unit>> addLeague(
+      String title,
+      DateTime startDate,
+      List<UserInformation> players,
+      int totalPlayers,
+      bool isHomeAndAway,
+      XFile? image) async {
     try {
       if (players.length > totalPlayers) {
         return left(
@@ -48,6 +53,7 @@ class LeaguesRepoImplementation implements LeaguesRepo {
         startDate: Timestamp.fromDate(startDate),
         totalPlayers: totalPlayers,
         currentRound: 0,
+        isHomeAndAway: isHomeAndAway,
       );
       await _firestoreService.addLeague(event, players);
       return right(unit);
@@ -86,6 +92,7 @@ class LeaguesRepoImplementation implements LeaguesRepo {
         startDate: Timestamp.fromDate(startDate),
         totalPlayers: oldLeague.totalPlayers,
         currentRound: oldLeague.currentRound,
+        isHomeAndAway: oldLeague.isHomeAndAway,
       );
       await _firestoreService.updateLeague(l);
       return right(unit);
@@ -128,7 +135,8 @@ class LeaguesRepoImplementation implements LeaguesRepo {
   Future<Either<Failure, League>> genarateMatches(League league) async {
     try {
       List<Player> playersList = await _firestoreService.getPlayers(league);
-      List<Fixture> generatedFixtures = generateFixtures(playersList, true);
+      List<Fixture> generatedFixtures =
+          generateFixtures(playersList, league.isHomeAndAway);
 
       generatedFixtures.sort((a, b) => a.round.compareTo(b.round));
 
@@ -150,12 +158,27 @@ class LeaguesRepoImplementation implements LeaguesRepo {
       return left(FirestoreFailure(errMessage: e.toString()));
     }
   }
-  
+
   @override
-  Future<Either<Failure, Unit>> deleteLeague(League league) async{
+  Future<Either<Failure, Unit>> deleteLeague(League league) async {
     try {
       await _firestoreService.deleteLeague(league);
       return right(unit);
+    } catch (e) {
+      if (e is FirebaseException) {
+        return left(FirestoreFailure.fromFirestoreFailure(e));
+      }
+      return left(FirestoreFailure(errMessage: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Fixture>>> getMatches(
+      League league, int round) async {
+    try {
+      List<Fixture> fixtures =
+          await _firestoreService.getMatches(league, round);
+      return right(fixtures);
     } catch (e) {
       if (e is FirebaseException) {
         return left(FirestoreFailure.fromFirestoreFailure(e));

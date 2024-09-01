@@ -7,11 +7,13 @@ class CardItem extends StatelessWidget {
     required this.playerName,
     required this.goals,
     required this.isWinner,
+    required this.isDraw,
   });
 
   final String playerName;
   final int goals;
   final bool isWinner;
+  final bool isDraw;
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +24,9 @@ class CardItem extends StatelessWidget {
           child: Text(
             playerName,
             style: Styles.normal18.copyWith(
-              fontWeight: isWinner ? FontWeight.bold : FontWeight.normal,
-              color: isWinner ? Colors.white : Colors.grey,
+              fontWeight:
+                  (!isWinner || isDraw) ? FontWeight.normal : FontWeight.bold,
+              color: (!isWinner || isDraw) ? Colors.grey : Colors.white,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -33,8 +36,9 @@ class CardItem extends StatelessWidget {
         Text(
           goals.toString(),
           style: Styles.normal18.copyWith(
-            fontWeight: isWinner ? FontWeight.bold : FontWeight.normal,
-            color: isWinner ? Colors.white : Colors.grey,
+            fontWeight:
+                (!isWinner || isDraw) ? FontWeight.normal : FontWeight.bold,
+            color: (!isWinner || isDraw) ? Colors.grey : Colors.white,
           ),
         ),
       ],

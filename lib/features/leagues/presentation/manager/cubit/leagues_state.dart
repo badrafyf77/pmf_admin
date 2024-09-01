@@ -26,6 +26,12 @@ final class GetPlayersSuccess extends LeaguesState {
   GetPlayersSuccess({required this.playersList});
 }
 
+final class GetMatchesSuccess extends LeaguesState {
+  final List<Fixture> fixtures;
+
+  GetMatchesSuccess({required this.fixtures});
+}
+
 final class GenerateMatchesSuccess extends LeaguesState {
   final League league;
 

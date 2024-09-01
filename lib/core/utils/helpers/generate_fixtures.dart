@@ -18,7 +18,7 @@ List<Fixture> generateFixtures(List<Player> players, bool isHomeAndAway) {
 
       fixtures.add(
         Fixture(
-          id: const Uuid().v6(),
+          id: const Uuid().v4(),
           homeId: players[home].id,
           homeName: players[home].displayName,
           homeGoals: 0,
@@ -33,7 +33,7 @@ List<Fixture> generateFixtures(List<Player> players, bool isHomeAndAway) {
       if (isHomeAndAway) {
         fixtures.add(
           Fixture(
-            id: const Uuid().v6(),
+            id: const Uuid().v4(),
             homeId: players[home].id,
             homeName: players[home].displayName,
             homeGoals: 0,

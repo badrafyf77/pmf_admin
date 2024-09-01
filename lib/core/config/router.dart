@@ -98,8 +98,13 @@ class AppRouter {
             pageBuilder: (context, state) {
               League league = state.extra as League;
               return NoTransitionPage(
-                child: LeagueMatchesView(
-                  league: league,
+                child: BlocProvider(
+                  create: (context) => LeaguesCubit(
+                    getIt.get<LeaguesRepoImplementation>(),
+                  ),
+                  child: LeagueMatchesView(
+                    league: league,
+                  ),
                 ),
               );
             },

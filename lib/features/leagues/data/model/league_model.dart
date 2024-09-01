@@ -7,6 +7,7 @@ class League {
   final Timestamp startDate;
   final int totalPlayers;
   final int currentRound;
+  final bool isHomeAndAway;
 
   League({
     required this.id,
@@ -15,6 +16,7 @@ class League {
     required this.startDate,
     required this.totalPlayers,
     required this.currentRound,
+    required this.isHomeAndAway,
   });
 
   League.fromJson(json)
@@ -25,6 +27,7 @@ class League {
           startDate: json['startDate'] as Timestamp,
           totalPlayers: json['totalPlayers'] as int,
           currentRound: json['currentRound'] as int,
+          isHomeAndAway: json['isHomeAndAway'] as bool,
         );
 
   Map<String, dynamic> toJson() {
@@ -35,6 +38,7 @@ class League {
       'startDate': startDate,
       'totalPlayers': totalPlayers,
       'currentRound': currentRound,
+      'isHomeAndAway': isHomeAndAway,
     };
   }
 }

@@ -5,7 +5,6 @@ import 'package:pmf_admin/core/utils/colors.dart';
 import 'package:pmf_admin/core/utils/customs/button.dart';
 import 'package:pmf_admin/core/utils/customs/loading_indicator.dart';
 import 'package:pmf_admin/core/utils/helpers/show_toast.dart';
-import 'package:pmf_admin/core/utils/styles.dart';
 import 'package:pmf_admin/features/leagues/data/model/league_model.dart';
 import 'package:pmf_admin/features/leagues/presentation/manager/cubit/leagues_cubit.dart';
 
@@ -27,19 +26,14 @@ class GenerateMatches extends StatelessWidget {
         if (state is GenerateMatchesSuccess) {
           AppRouter.navigateToWithExtra(
               context, AppRouter.leagueTable, state.league);
+          myShowToastSuccess(context, "Matches generated successfully!");
         }
       },
       builder: (context, state) {
         if (state is Leagueslaoding) {
-          return Column(
+          return const Column(
             children: [
-              const SizedBox(height: 20),
-              const CustomLoadingIndicator(),
-              const SizedBox(height: 20),
-              Text(
-                "Please be patient, this may take a moment.",
-                style: Styles.normal16,
-              ),
+              CustomLoadingIndicator(withText: true),
             ],
           );
         }

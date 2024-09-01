@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pmf_admin/core/utils/models/fixture_model.dart';
 import 'package:pmf_admin/core/utils/models/player_model.dart';
 import 'package:pmf_admin/features/leagues/data/model/league_model.dart';
 import 'package:pmf_admin/features/leagues/data/repo/league_repo.dart';
@@ -12,10 +13,10 @@ class LeaguesCubit extends Cubit<LeaguesState> {
   LeaguesCubit(this._leaguesRepo) : super(LeaguesInitial());
 
   Future<void> addLeague(String title, DateTime startDate,
-      List<UserInformation> players, int totalPlayers, XFile? image) async {
+      List<UserInformation> players, int totalPlayers, bool isHomeAndAway, XFile? image) async {
     emit(Leagueslaoding());
     var result = await _leaguesRepo.addLeague(
-        title, startDate, players, totalPlayers, image);
+        title, startDate, players, totalPlayers, isHomeAndAway, image);
     result.fold((left) {
       emit(LeaguesFailure(err: left.errMessage));
     }, (right) {
@@ -62,6 +63,16 @@ class LeaguesCubit extends Cubit<LeaguesState> {
       emit(LeaguesFailure(err: left.errMessage));
     }, (right) {
       emit(GetPlayersSuccess(playersList: right));
+    });
+  }
+
+  Future<void> getMatches(League league, int round) async {
+    emit(Leagueslaoding());
+    var result = await _leaguesRepo.getMatches(league, round);
+    result.fold((left) {
+      emit(LeaguesFailure(err: left.errMessage));
+    }, (right) {
+      emit(GetMatchesSuccess(fixtures: right));
     });
   }
 

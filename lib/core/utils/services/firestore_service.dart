@@ -30,6 +30,19 @@ class FirestoreService {
     return leaguesList;
   }
 
+  Future<List<Fixture>> getMatches(League league, int round) async {
+    List<Fixture> fixtures = [];
+
+    var snapshot =
+        await leagues.doc(league.id).collection('round-$round').get();
+
+    for (var doc in snapshot.docs) {
+      fixtures.add(Fixture.fromJson(doc.data()));
+    }
+
+    return fixtures;
+  }
+
   Future<League> getLeague(String id) async {
     dynamic data;
     League league;
@@ -97,7 +110,7 @@ class FirestoreService {
         await leagues
             .doc(league.id)
             .collection("round-$roundNumber")
-            .doc('fixture-${fixture.homeName}-vs-${fixture.awayName}')
+            .doc(fixture.id)
             .set(fixture.toJson());
       }
     }
