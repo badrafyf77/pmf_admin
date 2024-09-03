@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:board_datetime_picker/board_datetime_picker.dart';
 import 'package:pmf_admin/core/utils/colors.dart';
 import 'package:pmf_admin/core/utils/customs/button.dart';
+import 'package:pmf_admin/core/utils/customs/check_box.dart';
 import 'package:pmf_admin/core/utils/customs/date_time_picker.dart';
 import 'package:pmf_admin/core/utils/customs/drop_down_field.dart';
 import 'package:pmf_admin/core/utils/customs/loading_indicator.dart';
@@ -124,7 +125,7 @@ class _AddLeagueBodyState extends State<AddLeagueBody> {
                                 const SizedBox(
                                   height: 10,
                                 ),
-                                CategoryAndGenderRow(
+                                LeagueTypeCheckBoxs(
                                   text: 'Type',
                                   firstText: 'Home And Away',
                                   firstValue: isHomeAndAway,
@@ -386,16 +387,16 @@ class _AddLeagueBodyState extends State<AddLeagueBody> {
   }
 }
 
-class CategoryAndGenderRow extends StatelessWidget {
-  const CategoryAndGenderRow({
+class LeagueTypeCheckBoxs extends StatelessWidget {
+  const LeagueTypeCheckBoxs({
     super.key,
     required this.text,
     required this.firstText,
     required this.firstValue,
     required this.secondText,
     required this.secondValue,
-    this.onTapFirst,
-    this.onTapSecond,
+    required this.onTapFirst,
+    required this.onTapSecond,
   });
 
   final String text;
@@ -403,8 +404,8 @@ class CategoryAndGenderRow extends StatelessWidget {
   final bool firstValue;
   final String secondText;
   final bool secondValue;
-  final Function(bool?)? onTapFirst;
-  final Function(bool?)? onTapSecond;
+  final Function(bool?) onTapFirst;
+  final Function(bool?) onTapSecond;
 
   @override
   Widget build(BuildContext context) {
@@ -423,13 +424,13 @@ class CategoryAndGenderRow extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            DevisICheckBox(
+            CustomCheckBox(
               text: firstText,
               value: firstValue,
               onTap: onTapFirst,
             ),
             const SizedBox(width: 2),
-            DevisICheckBox(
+            CustomCheckBox(
               text: secondText,
               value: secondValue,
               onTap: onTapSecond,
@@ -437,59 +438,6 @@ class CategoryAndGenderRow extends StatelessWidget {
           ],
         ),
       ],
-    );
-  }
-}
-
-class DevisICheckBox extends StatelessWidget {
-  const DevisICheckBox({
-    super.key,
-    this.width,
-    required this.text,
-    this.onTap,
-    required this.value,
-  });
-
-  final double? width;
-  final String text;
-  final Function(bool?)? onTap;
-  final bool value;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 30,
-      width: width,
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Theme.of(context).colorScheme.primary,
-        ),
-        borderRadius: BorderRadius.circular(25),
-      ),
-      child: Row(
-        children: [
-          const SizedBox(
-            width: 5,
-          ),
-          Checkbox(
-            value: value,
-            onChanged: onTap,
-            shape: const CircleBorder(),
-            side: BorderSide(color: Theme.of(context).colorScheme.primary),
-            checkColor: Theme.of(context).colorScheme.primary,
-          ),
-          Text(
-            text,
-            style: Styles.normal12.copyWith(
-              color: Theme.of(context).colorScheme.primary,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-        ],
-      ),
     );
   }
 }

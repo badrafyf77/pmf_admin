@@ -24,6 +24,7 @@ class LeagueImageAndInfo extends StatelessWidget {
             height: 200,
           ),
         ),
+        const SizedBox(width: 10),
         Expanded(
           child: LeagueInfo(
             league: league,

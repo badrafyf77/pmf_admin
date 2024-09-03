@@ -8,9 +8,10 @@ import 'package:pmf_admin/features/leagues/presentation/views/widgets/league_ima
 import 'package:pmf_admin/features/leagues/presentation/views/widgets/league_matches.dart';
 
 class LeagueMatchesView extends StatelessWidget {
-  const LeagueMatchesView({super.key, required this.league});
+  const LeagueMatchesView({super.key, required this.league, required this.round});
 
   final League league;
+  final int round;
 
   @override
   Widget build(BuildContext context) {

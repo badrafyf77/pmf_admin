@@ -38,7 +38,9 @@ class AddLeagueView extends StatelessWidget {
             },
             builder: (context, state) {
               if (state is Leagueslaoding) {
-                return const Center(child: CustomLoadingIndicator());
+                return const Center(
+                  child: CustomLoadingIndicator(withText: true),
+                );
               }
               return const AddLeagueBody();
             },

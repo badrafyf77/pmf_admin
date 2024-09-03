@@ -48,8 +48,7 @@ class _ChooseInitialEventState extends State<ChooseInitialEvent> {
           child: (items.isNotEmpty)
               ? MyDropDownField(
                   initialValue: widget.initialEvent.title,
-                  onChanged: (value) {
-                  },
+                  onChanged: (value) {},
                   items: items,
                 )
               : const SizedBox(),

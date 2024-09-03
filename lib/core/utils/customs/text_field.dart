@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:pmf_admin/core/utils/colors.dart';
 import 'package:pmf_admin/core/utils/styles.dart';
 import 'package:flutter/material.dart';
@@ -7,18 +8,20 @@ class MyTextField extends StatelessWidget {
     super.key,
     this.isPass = false,
     this.isTextArea = false,
+    this.isMatchResult = false,
     required this.controller,
     required this.validator,
-    required this.hintText,
-    required this.width,
+    this.hintText,
+    this.width,
   });
 
   final bool isPass;
   final bool isTextArea;
+  final bool isMatchResult;
   final TextEditingController controller;
   final String? Function(String?)? validator;
-  final String hintText;
-  final double width;
+  final String? hintText;
+  final double? width;
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +29,17 @@ class MyTextField extends StatelessWidget {
       width: width,
       child: TextFormField(
         maxLines: isTextArea ? 5 : 1,
+        //for match result text field
+        keyboardType: isMatchResult ? TextInputType.number : null,
+        inputFormatters: isMatchResult
+            ? [
+                LengthLimitingTextInputFormatter(2),
+              ]
+            : null,
         controller: controller,
         validator: validator,
         obscureText: isPass,
+        textAlign: TextAlign.center,
         style: Styles.normal16.copyWith(
           fontWeight: FontWeight.normal,
         ),

@@ -1,5 +1,7 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pmf_admin/core/config/router.dart';
 import 'package:pmf_admin/core/utils/customs/header.dart';
+import 'package:pmf_admin/features/leagues/presentation/manager/cubit/leagues_cubit.dart';
 import 'package:pmf_admin/features/leagues/presentation/views/widgets/leagues_list.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +19,9 @@ class LeaguesView extends StatelessWidget {
             onPressedButton: () {
               AppRouter.navigateTo(context, AppRouter.addLeague);
             },
-            onPressedRefresh: () {},
+            onPressedRefresh: () {
+              BlocProvider.of<LeaguesCubit>(context).getLeagues();
+            },
           ),
           const LeaguesList(),
         ],

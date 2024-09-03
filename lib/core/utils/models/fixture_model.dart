@@ -47,4 +47,28 @@ class Fixture {
       'isPlayed': isPlayed,
     };
   }
+
+  Fixture copyWith({
+    String? id,
+    int? round,
+    String? homeId,
+    String? homeName,
+    int? homeGoals,
+    String? awayId,
+    String? awayName,
+    int? awayGoals,
+    bool? isPlayed,
+  }) {
+    return Fixture(
+      id: id ?? this.id,
+      round: round ?? this.round,
+      homeId: homeId ?? this.homeId,
+      homeName: homeName ?? this.homeName,
+      homeGoals: homeGoals ?? this.homeGoals,
+      awayId: awayId ?? this.awayId,
+      awayName: awayName ?? this.awayName,
+      awayGoals: awayGoals ?? this.awayGoals,
+      isPlayed: isPlayed ?? this.isPlayed,
+    );
+  }
 }

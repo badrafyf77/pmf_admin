@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:pmf_admin/core/config/router.dart';
 import 'package:pmf_admin/core/utils/colors.dart';
 import 'package:pmf_admin/core/utils/models/fixture_model.dart';
+import 'package:pmf_admin/features/leagues/data/model/league_model.dart';
 import 'package:pmf_admin/features/leagues/presentation/views/widgets/card_item.dart';
 
 class FixtureCard extends StatelessWidget {
-  const FixtureCard({super.key, required this.fixture});
+  const FixtureCard({super.key, required this.fixture, required this.league});
 
   final Fixture fixture;
+  final League league;
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +17,13 @@ class FixtureCard extends StatelessWidget {
       return Padding(
         padding: const EdgeInsets.only(bottom: 10, right: 10, left: 10),
         child: InkWell(
-          onTap: () {},
+          onTap: () {
+            AppRouter.navigateToWithExtra(
+              context,
+              AppRouter.match,
+              {'league': league, 'fixture': fixture},
+            );
+          },
           child: Container(
             height: 80,
             width: constraints.maxWidth,

@@ -186,4 +186,20 @@ class LeaguesRepoImplementation implements LeaguesRepo {
       return left(FirestoreFailure(errMessage: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, Map<String,dynamic>>> editMatch(
+      League league, Fixture fixture, int homeGoals, int awayGoals) async {
+    try {
+      await _firestoreService.editFixture(
+          league, fixture, homeGoals, awayGoals);
+          League l = await _firestoreService.getLeague(league.id);
+      return right({'league': l, 'round': fixture.round},);
+    } catch (e) {
+      if (e is FirebaseException) {
+        return left(FirestoreFailure.fromFirestoreFailure(e));
+      }
+      return left(FirestoreFailure(errMessage: e.toString()));
+    }
+  }
 }

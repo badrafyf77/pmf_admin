@@ -40,7 +40,7 @@ class _LeagueTableState extends State<LeagueTable> {
         }
         return Skeletonizer(
           enabled: true,
-          child: StandingTable(playersList: leaguePlayers),
+          child: StandingTable(playersList: fakePlayers),
         );
       },
     );

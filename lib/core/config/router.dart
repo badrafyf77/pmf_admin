@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pmf_admin/core/utils/models/fixture_model.dart';
 import 'package:pmf_admin/core/utils/service_locator.dart';
 import 'package:pmf_admin/features/leagues/data/model/league_model.dart';
 import 'package:pmf_admin/core/utils/customs/dashboard_screen.dart';
@@ -13,6 +14,7 @@ import 'package:pmf_admin/features/leagues/presentation/views/leagues_view.dart'
 import 'package:pmf_admin/features/home/presentation/view/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pmf_admin/features/leagues/presentation/views/match_view.dart';
 import 'package:pmf_admin/features/users/data/repo/users_repo_implementation.dart';
 import 'package:pmf_admin/features/users/presentation/manager/get%20users%20cubit/get_users_cubit.dart';
 import 'package:pmf_admin/features/users/presentation/views/users_view.dart';
@@ -25,6 +27,7 @@ class AppRouter {
   static const leagueTable = '/league-table';
   static const leagueMatches = '/league-matches';
   static const editLeague = '/edit-league';
+  static const match = '/match';
   static const users = '/users';
 
   static final router = GoRouter(
@@ -96,7 +99,9 @@ class AppRouter {
           GoRoute(
             path: leagueMatches,
             pageBuilder: (context, state) {
-              League league = state.extra as League;
+              final data = state.extra as Map<String, dynamic>;
+              League league = data['league'];
+              int round = data['round'];
               return NoTransitionPage(
                 child: BlocProvider(
                   create: (context) => LeaguesCubit(
@@ -104,6 +109,7 @@ class AppRouter {
                   ),
                   child: LeagueMatchesView(
                     league: league,
+                    round: round,
                   ),
                 ),
               );
@@ -120,6 +126,25 @@ class AppRouter {
                   ),
                   child: EditLeagueView(
                     league: league,
+                  ),
+                ),
+              );
+            },
+          ),
+          GoRoute(
+            path: match,
+            pageBuilder: (context, state) {
+              final data = state.extra as Map<String, dynamic>;
+              League league = data['league'];
+              Fixture fixture = data['fixture'];
+              return NoTransitionPage(
+                child: BlocProvider(
+                  create: (context) => LeaguesCubit(
+                    getIt.get<LeaguesRepoImplementation>(),
+                  ),
+                  child: MatchView(
+                    league: league,
+                    fixture: fixture,
                   ),
                 ),
               );

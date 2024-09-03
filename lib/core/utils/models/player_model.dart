@@ -51,56 +51,35 @@ class Player {
       'pts': pts,
     };
   }
+
+  Player copyWith({
+    String? id,
+    String? displayName,
+    int? played,
+    int? wins,
+    int? draws,
+    int? losses,
+    int? scored,
+    int? conceded,
+    int? goalDef,
+    int? pts,
+  }) {
+    return Player(
+      id: id ?? this.id,
+      displayName: displayName ?? this.displayName,
+      played: played ?? this.played,
+      wins: wins ?? this.wins,
+      draws: draws ?? this.draws,
+      losses: losses ?? this.losses,
+      scored: scored ?? this.scored,
+      conceded: conceded ?? this.conceded,
+      goalDef: goalDef ?? this.goalDef,
+      pts: pts ?? this.pts,
+    );
+  }
 }
 
-List<Player> leaguePlayers = [
-  Player(
-      id: '1',
-      displayName: "John Doe",
-      played: 20,
-      wins: 12,
-      draws: 5,
-      losses: 3,
-      scored: 30,
-      conceded: 15,
-      goalDef: 15,
-      pts: 41),
-  Player(
-      id: '2',
-      displayName: "Jane Smith",
-      played: 20,
-      wins: 10,
-      draws: 7,
-      losses: 3,
-      scored: 25,
-      conceded: 18,
-      goalDef: 7,
-      pts: 37),
-  Player(
-      id: '3',
-      displayName: "Alex Johnson",
-      played: 20,
-      wins: 8,
-      draws: 8,
-      losses: 4,
-      scored: 20,
-      conceded: 14,
-      goalDef: 6,
-      pts: 32),
-  Player(
-      id: '4',
-      displayName: "Chris Brown",
-      played: 20,
-      wins: 14,
-      draws: 3,
-      losses: 3,
-      scored: 35,
-      conceded: 12,
-      goalDef: 23,
-      pts: 45),
-];
-
-List<Player> groupPlayers = [
+List<Player> fakePlayers = [
   Player(
       id: '1',
       displayName: "John Doe",

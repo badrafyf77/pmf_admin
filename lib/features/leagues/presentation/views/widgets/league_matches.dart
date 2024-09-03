@@ -20,25 +20,28 @@ class _LeagueMatchesState extends State<LeagueMatches> {
   @override
   void initState() {
     BlocProvider.of<LeaguesCubit>(context)
-                .getMatches(widget.league, widget.league.currentRound);
+        .getMatches(widget.league, widget.league.currentRound);
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LeaguesCubit, LeaguesState>(
-      builder: (context, state) {
-        if (state is LeaguesFailure) {
-          return RefreshIcon(onPressed: () {
-            BlocProvider.of<LeaguesCubit>(context)
-                .getMatches(widget.league, widget.league.currentRound);
-          });
-        }
-        if (state is GetMatchesSuccess) {
-          return Column(
-            children: [
-              const WeeksRow(),
-              const SizedBox(height: 10),
-              GridView.builder(
+    return Column(
+      children: [
+        WeeksRow(
+          league: widget.league,
+        ),
+        const SizedBox(height: 10),
+        BlocBuilder<LeaguesCubit, LeaguesState>(
+          builder: (context, state) {
+            if (state is LeaguesFailure) {
+              return RefreshIcon(onPressed: () {
+                BlocProvider.of<LeaguesCubit>(context)
+                    .getMatches(widget.league, widget.league.currentRound);
+              });
+            }
+            if (state is GetMatchesSuccess) {
+              return GridView.builder(
                 physics: const ScrollPhysics(),
                 shrinkWrap: true,
                 padding: EdgeInsets.zero,
@@ -53,15 +56,16 @@ class _LeagueMatchesState extends State<LeagueMatches> {
                 itemCount: state.fixtures.length,
                 itemBuilder: (context, index) {
                   return FixtureCard(
+                    league: widget.league,
                     fixture: state.fixtures[index],
                   );
                 },
-              ),
-            ],
-          );
-        }
-        return const CustomLoadingIndicator();
-      },
+              );
+            }
+            return const CustomLoadingIndicator();
+          },
+        ),
+      ],
     );
   }
 

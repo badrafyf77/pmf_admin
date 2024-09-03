@@ -32,7 +32,7 @@ class LeagueBar extends StatelessWidget {
             value: "Matches",
             onTap: () {
               AppRouter.navigateToWithExtra(
-                  context, AppRouter.leagueMatches, league);
+                  context, AppRouter.leagueMatches, {'league': league, 'round': league.currentRound},);
             },
             isSelected: isMatchesSelected,
           ),

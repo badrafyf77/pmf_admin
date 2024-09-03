@@ -15,4 +15,5 @@ abstract class LeaguesRepo {
   Future<Either<Failure, Unit>> editLeague(League oldLeague, String newTitle, DateTime startDate, bool isOldImage, XFile? image);
   Future<Either<Failure, Unit>> deleteLeague(League league);
   Future<Either<Failure, League>> genarateMatches(League league);
+  Future<Either<Failure, Map<String,dynamic>>> editMatch(League league, Fixture fixture, int homeGoals, int awayGoals);
 }

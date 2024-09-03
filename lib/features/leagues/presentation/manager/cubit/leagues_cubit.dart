@@ -12,8 +12,13 @@ class LeaguesCubit extends Cubit<LeaguesState> {
   final LeaguesRepo _leaguesRepo;
   LeaguesCubit(this._leaguesRepo) : super(LeaguesInitial());
 
-  Future<void> addLeague(String title, DateTime startDate,
-      List<UserInformation> players, int totalPlayers, bool isHomeAndAway, XFile? image) async {
+  Future<void> addLeague(
+      String title,
+      DateTime startDate,
+      List<UserInformation> players,
+      int totalPlayers,
+      bool isHomeAndAway,
+      XFile? image) async {
     emit(Leagueslaoding());
     var result = await _leaguesRepo.addLeague(
         title, startDate, players, totalPlayers, isHomeAndAway, image);
@@ -83,6 +88,18 @@ class LeaguesCubit extends Cubit<LeaguesState> {
       emit(LeaguesFailure(err: left.errMessage));
     }, (right) {
       emit(GenerateMatchesSuccess(league: right));
+    });
+  }
+
+  Future<void> editFixture(
+      League league, Fixture fixture, int homeGoals, int awayGoals) async {
+    emit(Leagueslaoding());
+    var result =
+        await _leaguesRepo.editMatch(league, fixture, homeGoals, awayGoals);
+    result.fold((left) {
+      emit(LeaguesFailure(err: left.errMessage));
+    }, (right) {
+      emit(EditMatchSuccess(data: right));
     });
   }
 }

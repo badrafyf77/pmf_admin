@@ -37,3 +37,9 @@ final class GenerateMatchesSuccess extends LeaguesState {
 
   GenerateMatchesSuccess({required this.league});
 }
+
+final class EditMatchSuccess extends LeaguesState {
+  final Map<String,dynamic> data;
+
+  EditMatchSuccess({required this.data});
+}
