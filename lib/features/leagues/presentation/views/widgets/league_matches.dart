@@ -48,7 +48,7 @@ class _LeagueMatchesState extends State<LeagueMatches> {
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount:
                       getCrossAxisCount(MediaQuery.of(context).size.width),
-                  mainAxisExtent: 80.0,
+                  mainAxisExtent: 110.0,
                   mainAxisSpacing: 20.0,
                   crossAxisSpacing: 20.0,
                   childAspectRatio: 4.0,

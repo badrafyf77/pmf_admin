@@ -95,6 +95,21 @@ class FirestoreService {
   }
 
   Future<void> deleteLeague(League league) async {
+    var playersSnapshots =
+        await leagues.doc(league.id).collection(playersCollection).get();
+    for (var doc in playersSnapshots.docs) {
+      await doc.reference.delete();
+    }
+    if (league.currentRound > 0) {
+      final instance = FirebaseFirestore.instance;
+      final batch = instance.batch();
+      var collection = leagues.doc(league.id).collection(playersCollection);
+      var roundsSnapshots = await collection.get();
+      for (var doc in roundsSnapshots.docs) {
+        batch.delete(doc.reference);
+      }
+      await batch.commit();
+    }
     await leagues.doc(league.id).delete();
   }
 

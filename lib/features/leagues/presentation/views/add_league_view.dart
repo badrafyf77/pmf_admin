@@ -14,38 +14,38 @@ class AddLeagueView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          NavigateBackIcon(
-            title: 'Add league',
-            onPressed: () {
-              AppRouter.navigateTo(context, AppRouter.leagues);
-            },
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          BlocConsumer<LeaguesCubit, LeaguesState>(
-            listener: (context, state) {
-              if (state is LeaguesFailure) {
-                myShowToastError(context, state.err);
-              }
-              if (state is LeaguesSuccess) {
-                myShowToastSuccess(context, "League added successfully!");
-                AppRouter.navigateTo(context, AppRouter.leagues);
-              }
-            },
-            builder: (context, state) {
-              if (state is Leagueslaoding) {
-                return const Center(
-                  child: CustomLoadingIndicator(withText: true),
-                );
-              }
-              return const AddLeagueBody();
-            },
-          ),
-        ],
+      child: BlocConsumer<LeaguesCubit, LeaguesState>(
+        listener: (context, state) {
+          if (state is LeaguesFailure) {
+            myShowToastError(context, state.err);
+          }
+          if (state is LeaguesSuccess) {
+            myShowToastSuccess(context, "League added successfully!");
+            AppRouter.navigateTo(context, AppRouter.leagues);
+          }
+        },
+        builder: (context, state) {
+          if (state is Leagueslaoding) {
+            return const Center(
+              child: CustomLoadingIndicator(withText: true),
+            );
+          }
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              NavigateBackIcon(
+                title: 'Add league',
+                onPressed: () {
+                  AppRouter.navigateTo(context, AppRouter.leagues);
+                },
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const AddLeagueBody(),
+            ],
+          );
+        },
       ),
     );
   }
