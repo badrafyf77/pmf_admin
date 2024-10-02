@@ -5,7 +5,7 @@ import 'package:pmf_admin/features/leagues/data/model/league_model.dart';
 import 'package:pmf_admin/features/users/data/models/users_model.dart';
 
 class FirestoreService {
-  String playersCollection = "players";
+  final String playersCollection = "players";
   CollectionReference leagues =
       FirebaseFirestore.instance.collection('leagues');
   CollectionReference users = FirebaseFirestore.instance.collection('users');

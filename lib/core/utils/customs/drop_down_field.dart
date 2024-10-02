@@ -8,12 +8,12 @@ class MyDropDownField extends StatefulWidget {
     super.key,
     required this.onChanged,
     required this.items,
-    required this.initialValue,
+    this.initialValue,
   });
 
   final Function(String?)? onChanged;
   final List<String> items;
-  final String initialValue;
+  final String? initialValue;
 
   @override
   State<MyDropDownField> createState() => _MyDropDownFieldState();

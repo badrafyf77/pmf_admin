@@ -56,7 +56,7 @@ class _SignInFormState extends State<SignInForm> {
             const SizedBox(
               height: 5,
             ),
-            MyTextField(
+            CustomTextField(
               width: size.width * 0.32,
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -79,7 +79,7 @@ class _SignInFormState extends State<SignInForm> {
             const SizedBox(
               height: 5,
             ),
-            MyTextField(
+            CustomTextField(
               isPass: true,
               width: size.width * 0.32,
               validator: (value) {

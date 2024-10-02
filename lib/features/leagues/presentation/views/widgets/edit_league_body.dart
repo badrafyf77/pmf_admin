@@ -86,7 +86,7 @@ class _EditLeagueBodyState extends State<EditLeagueBody> {
                                 const SizedBox(
                                   height: 5,
                                 ),
-                                MyTextField(
+                                CustomTextField(
                                   controller: titleController,
                                   validator: (value) {
                                     if (value!.isEmpty) {

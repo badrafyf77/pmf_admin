@@ -44,7 +44,7 @@ class PlayerItem extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 4),
-                MyTextField(
+                CustomTextField(
                   isMatchResult: true,
                   controller: homeController,
                   validator: (value) {
@@ -73,7 +73,7 @@ class PlayerItem extends StatelessWidget {
             const AppLogo(height: 160),
             Row(
               children: [
-                MyTextField(
+                CustomTextField(
                   isMatchResult: true,
                   controller: awayController,
                   validator: (value) {

@@ -3,8 +3,8 @@ import 'package:pmf_admin/core/utils/colors.dart';
 import 'package:pmf_admin/core/utils/styles.dart';
 import 'package:flutter/material.dart';
 
-class MyTextField extends StatelessWidget {
-  const MyTextField({
+class CustomTextField extends StatelessWidget {
+  const CustomTextField({
     super.key,
     this.isPass = false,
     this.isTextArea = false,
@@ -12,7 +12,7 @@ class MyTextField extends StatelessWidget {
     required this.controller,
     required this.validator,
     this.hintText,
-    this.width,
+    this.width, this.onChanged,
   });
 
   final bool isPass;
@@ -20,6 +20,7 @@ class MyTextField extends StatelessWidget {
   final bool isMatchResult;
   final TextEditingController controller;
   final String? Function(String?)? validator;
+  final void Function(String)? onChanged;
   final String? hintText;
   final double? width;
 
@@ -38,6 +39,7 @@ class MyTextField extends StatelessWidget {
             : null,
         controller: controller,
         validator: validator,
+        onChanged: onChanged,
         obscureText: isPass,
         textAlign: TextAlign.center,
         style: Styles.normal16.copyWith(

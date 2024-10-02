@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pmf_admin/core/config/router.dart';
 import 'package:pmf_admin/core/utils/customs/header.dart';
 import 'package:pmf_admin/core/utils/customs/loading_indicator.dart';
 import 'package:pmf_admin/core/utils/helpers/show_toast.dart';
@@ -41,37 +42,50 @@ class _LeaguesListState extends State<LeaguesList> {
           );
         }
         if (state is GetLeaguesSuccess) {
-          return state.leaguesList.isEmpty
-              ? Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 40),
-                    child: Text(
-                      "No leagues to show",
-                      style: Styles.normal16.copyWith(color: Colors.grey),
+          return Column(
+            children: [
+              Header(
+            buttonTitle: "Add league",
+            onPressedButton: () {
+              AppRouter.navigateTo(context, AppRouter.addLeague);
+            },
+            onPressedRefresh: () {
+              BlocProvider.of<LeaguesCubit>(context).getLeagues();
+            },
+          ),
+              state.leaguesList.isEmpty
+                  ? Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 40),
+                        child: Text(
+                          "No leagues to show",
+                          style: Styles.normal16.copyWith(color: Colors.grey),
+                        ),
+                      ),
+                    )
+                  : Expanded(
+                      child: ScrollConfiguration(
+                        behavior: ScrollConfiguration.of(context)
+                            .copyWith(scrollbars: false),
+                        child: ListView.builder(
+                          itemCount: state.leaguesList.length,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              children: [
+                                LeagueItem(
+                                  league: state.leaguesList[index],
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
                     ),
-                  ),
-                )
-              : Expanded(
-                  child: ScrollConfiguration(
-                    behavior: ScrollConfiguration.of(context)
-                        .copyWith(scrollbars: false),
-                    child: ListView.builder(
-                      itemCount: state.leaguesList.length,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          children: [
-                            LeagueItem(
-                              league: state.leaguesList[index],
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                );
+            ],
+          );
         }
         return const CustomLoadingIndicator();
       },

@@ -1,10 +1,11 @@
 import 'dart:io';
 import 'package:board_datetime_picker/board_datetime_picker.dart';
+import 'package:pmf_admin/core/utils/assets.dart';
 import 'package:pmf_admin/core/utils/colors.dart';
 import 'package:pmf_admin/core/utils/customs/button.dart';
 import 'package:pmf_admin/core/utils/customs/check_box.dart';
+import 'package:pmf_admin/core/utils/customs/custom_gridview_animation_config.dart';
 import 'package:pmf_admin/core/utils/customs/date_time_picker.dart';
-import 'package:pmf_admin/core/utils/customs/drop_down_field.dart';
 import 'package:pmf_admin/core/utils/customs/loading_indicator.dart';
 import 'package:pmf_admin/core/utils/customs/text_field.dart';
 import 'package:pmf_admin/core/utils/helpers/show_toast.dart';
@@ -30,6 +31,9 @@ class AddLeagueBody extends StatefulWidget {
 class _AddLeagueBodyState extends State<AddLeagueBody> {
   TextEditingController titleController = TextEditingController();
   TextEditingController totalPlayersController = TextEditingController();
+  TextEditingController searchController = TextEditingController();
+
+  final ValueNotifier<String> searchQuery = ValueNotifier<String>("");
 
   DateTime startDate = DateTime.now();
 
@@ -50,333 +54,475 @@ class _AddLeagueBodyState extends State<AddLeagueBody> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: formKey,
-      child: Expanded(
-        child: ScrollConfiguration(
-          behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-          child: SingleChildScrollView(
-            physics: const ClampingScrollPhysics(),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
+    return BlocBuilder<GetUsersCubit, GetUsersState>(
+      builder: (context, state) {
+        if (state is GetUsersFailure) {
+          return IconButton(
+            onPressed: () {
+              BlocProvider.of<GetUsersCubit>(context).getUsers();
+            },
+            icon: const Icon(Icons.refresh),
+          );
+        }
+        if (state is GetUsersSuccess) {
+          return Form(
+            key: formKey,
+            child: Expanded(
+              child: ScrollConfiguration(
+                behavior:
+                    ScrollConfiguration.of(context).copyWith(scrollbars: false),
+                child: SingleChildScrollView(
+                  physics: const ClampingScrollPhysics(),
                   child: Column(
                     children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(15),
+                                    child: LayoutBuilder(
+                                        builder: (context, constraints) {
+                                      return Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'General Information',
+                                            style: Styles.normal18,
+                                          ),
+                                          const SizedBox(
+                                            height: 15,
+                                          ),
+                                          Text(
+                                            'League title',
+                                            style: Styles.normal15,
+                                          ),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          CustomTextField(
+                                            controller: titleController,
+                                            validator: (value) {
+                                              if (value!.isEmpty) {
+                                                return 'Enter league title';
+                                              }
+                                              return null;
+                                            },
+                                            hintText: 'Title',
+                                            width: constraints.maxWidth,
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
+                                            'Total Number of Players',
+                                            style: Styles.normal15,
+                                          ),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          CustomTextField(
+                                            controller: totalPlayersController,
+                                            validator: (value) {
+                                              if (value!.isEmpty) {
+                                                return 'Enter total players';
+                                              } else if (!isNumeric(value)) {
+                                                return 'Enter a valide total players';
+                                              }
+                                              return null;
+                                            },
+                                            hintText: 'Total players',
+                                            width: constraints.maxWidth,
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          LeagueTypeCheckBoxs(
+                                            text: 'Type',
+                                            firstText: 'Home And Away',
+                                            firstValue: isHomeAndAway,
+                                            onTapFirst: (selected) {
+                                              setState(() {
+                                                isHomeAndAway = !isHomeAndAway;
+                                              });
+                                            },
+                                            secondText: 'Home',
+                                            secondValue: !isHomeAndAway,
+                                            onTapSecond: (selected) {
+                                              setState(() {
+                                                isHomeAndAway = !isHomeAndAway;
+                                              });
+                                            },
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
+                                            'Start Date',
+                                            style: Styles.normal15,
+                                          ),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          CustomDateAndTimePicker(
+                                            date: startDate,
+                                            onPressed: () async {
+                                              final result =
+                                                  await showBoardDateTimePicker(
+                                                context: context,
+                                                initialDate: startDate,
+                                                pickerType:
+                                                    DateTimePickerType.datetime,
+                                                options:
+                                                    const BoardDateTimeOptions(
+                                                  startDayOfWeek:
+                                                      DateTime.sunday,
+                                                  pickerFormat:
+                                                      PickerFormat.ymd,
+                                                ),
+                                                onResult: (val) {},
+                                              );
+                                              if (result != null) {
+                                                setState(
+                                                    () => startDate = result);
+                                              }
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    }),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 15,
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          Column(
+                            children: [
+                              Container(
+                                height: 340,
+                                width: 300,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(15),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        'League picture',
+                                        style: Styles.normal18,
+                                      ),
+                                      const SizedBox(
+                                        height: 20,
+                                      ),
+                                      image == null
+                                          ? InkWell(
+                                              onTap: () async {
+                                                try {
+                                                  final ImagePicker picker =
+                                                      ImagePicker();
+                                                  image =
+                                                      await picker.pickImage(
+                                                          source: ImageSource
+                                                              .gallery);
+                                                  setState(() {});
+                                                  // ignore: empty_catches
+                                                } catch (e) {}
+                                              },
+                                              child: Container(
+                                                height: 50,
+                                                width: 50,
+                                                decoration: const BoxDecoration(
+                                                  color: Colors.black,
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: const Icon(
+                                                  Icons.add,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            )
+                                          : Column(
+                                              children: [
+                                                Image.file(
+                                                  File(image!.path),
+                                                  fit: BoxFit.fill,
+                                                  height: 180,
+                                                  width: 250,
+                                                ),
+                                                const SizedBox(
+                                                  height: 5,
+                                                ),
+                                                IconButton(
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      image = null;
+                                                    });
+                                                  },
+                                                  icon:
+                                                      const Icon(Icons.delete),
+                                                )
+                                              ],
+                                            ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              CustomButton(
+                                onPressed: () {
+                                  if (image == null) {
+                                    myShowToastError(
+                                        context, "Select an image");
+                                  } else if (formKey.currentState!.validate()) {
+                                    BlocProvider.of<LeaguesCubit>(context)
+                                        .addLeague(
+                                      titleController.text,
+                                      startDate,
+                                      selectedUsers,
+                                      int.parse(totalPlayersController.text),
+                                      isHomeAndAway,
+                                      image,
+                                    );
+                                    setState(() {
+                                      titleController.clear();
+                                      totalPlayersController.clear();
+                                      image = null;
+                                    });
+                                  }
+                                },
+                                title: "Add",
+                                backgroundColor: AppColors.kPrimaryColor,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 15),
                       Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: LayoutBuilder(builder: (context, constraints) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'General Information',
-                                  style: Styles.normal18,
-                                ),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                Text(
-                                  'League title',
-                                  style: Styles.normal15,
-                                ),
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                MyTextField(
-                                  controller: titleController,
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return 'Enter league title';
-                                    }
-                                    return null;
-                                  },
-                                  hintText: 'Title',
-                                  width: constraints.maxWidth,
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  'Total Number of Players',
-                                  style: Styles.normal15,
-                                ),
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                MyTextField(
-                                  controller: totalPlayersController,
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return 'Enter total players';
-                                    } else if (!isNumeric(value)) {
-                                      return 'Enter a valide total players';
-                                    }
-                                    return null;
-                                  },
-                                  hintText: 'Total players',
-                                  width: constraints.maxWidth,
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                LeagueTypeCheckBoxs(
-                                  text: 'Type',
-                                  firstText: 'Home And Away',
-                                  firstValue: isHomeAndAway,
-                                  onTapFirst: (selected) {
-                                    setState(() {
-                                      isHomeAndAway = !isHomeAndAway;
-                                    });
-                                  },
-                                  secondText: 'Home',
-                                  secondValue: !isHomeAndAway,
-                                  onTapSecond: (selected) {
-                                    setState(() {
-                                      isHomeAndAway = !isHomeAndAway;
-                                    });
-                                  },
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  'Start Date',
-                                  style: Styles.normal15,
-                                ),
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                CustomDateAndTimePicker(
-                                  date: startDate,
-                                  onPressed: () async {
-                                    final result =
-                                        await showBoardDateTimePicker(
-                                      context: context,
-                                      initialDate: startDate,
-                                      pickerType: DateTimePickerType.datetime,
-                                      options: const BoardDateTimeOptions(
-                                        startDayOfWeek: DateTime.sunday,
-                                        pickerFormat: PickerFormat.ymd,
-                                      ),
-                                      onResult: (val) {},
-                                    );
-                                    if (result != null) {
-                                      setState(() => startDate = result);
-                                    }
-                                  },
-                                ),
-                              ],
-                            );
-                          }),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      BlocBuilder<GetUsersCubit, GetUsersState>(
-                        builder: (context, state) {
-                          if (state is GetUsersFailure) {
-                            return IconButton(
-                              onPressed: () {
-                                BlocProvider.of<GetUsersCubit>(context)
-                                    .getUsers();
-                              },
-                              icon: const Icon(Icons.refresh),
-                            );
-                          }
-                          if (state is GetUsersSuccess) {
-                            List<String> items = [];
-                            for (var element in state.usersList) {
-                              items.add(element.displayName);
-                            }
-                            return Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(20),
+                          padding: const EdgeInsets.all(10),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Add Players (${selectedUsers.length})',
+                                    style: Styles.normal18,
+                                  ),
+                                ],
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          'Add Players (${selectedUsers.length})',
-                                          style: Styles.normal18,
-                                        ),
-                                        SizedBox(
-                                          width: 200,
-                                          child: MyDropDownField(
-                                            onChanged: (user) {
-                                              if (user != null) {
-                                                int index = items.indexOf(user);
+                              const SizedBox(height: 15),
+                              Container(
+                                height: 2,
+                                color: Colors.grey,
+                              ),
+                              const SizedBox(height: 15),
+                              LayoutBuilder(
+                                builder: (context, constraints) {
+                                  return Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        width: constraints.maxWidth * .58,
+                                        child: Column(
+                                          children: [
+                                            CustomTextField(
+                                              controller: searchController,
+                                              onChanged: (value) {
                                                 setState(() {
-                                                  if (selectedUsers.contains(
-                                                      state.usersList[index])) {
-                                                    myShowToastError(context,
-                                                        "Player already exist");
-                                                  } else {
-                                                    selectedUsers.add(
-                                                        state.usersList[index]);
-                                                  }
+                                                  searchQuery.value = value;
                                                 });
-                                              }
-                                            },
-                                            items: items,
-                                            initialValue: items[0],
-                                          ),
+                                              },
+                                              validator: (value) {
+                                                return null;
+                                              },
+                                              hintText: "Search",
+                                            ),
+                                            const SizedBox(height: 10),
+                                            ValueListenableBuilder<String>(
+                                                valueListenable: searchQuery,
+                                                builder:
+                                                    (context, value, child) {
+                                                  var filteredUsers = state
+                                                      .usersList
+                                                      .where((user) {
+                                                    return user.displayName
+                                                        .toLowerCase()
+                                                        .contains(searchQuery
+                                                            .value
+                                                            .toLowerCase());
+                                                  }).toList();
+                                                  return GridView.builder(
+                                                    physics:
+                                                        const NeverScrollableScrollPhysics(),
+                                                    shrinkWrap: true,
+                                                    padding: EdgeInsets.zero,
+                                                    gridDelegate:
+                                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                                      crossAxisCount: 2,
+                                                      mainAxisExtent: 150.0,
+                                                      mainAxisSpacing: 20.0,
+                                                      crossAxisSpacing: 20.0,
+                                                      childAspectRatio: 4.0,
+                                                    ),
+                                                    itemCount:
+                                                        filteredUsers.length,
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      return CustomGridviewAnimationConfig(
+                                                          index: index,
+                                                          columnCount:
+                                                              filteredUsers
+                                                                  .length,
+                                                          child: PlayerItem(
+                                                            user: filteredUsers[
+                                                                index],
+                                                            onTap: () {
+                                                              setState(() {
+                                                                if (selectedUsers
+                                                                    .contains(
+                                                                        filteredUsers[
+                                                                            index])) {
+                                                                  myShowToastError(
+                                                                      context,
+                                                                      "Player already exist");
+                                                                } else {
+                                                                  selectedUsers.add(
+                                                                      filteredUsers[
+                                                                          index]);
+                                                                }
+                                                              });
+                                                            },
+                                                          ));
+                                                    },
+                                                  );
+                                                }),
+                                          ],
                                         ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 15),
-                                    Container(
-                                      height: 2,
-                                      color: Colors.grey,
-                                    ),
-                                    const SizedBox(height: 15),
-                                    selectedUsers.isEmpty
-                                        ? Text(
-                                            "No player selected",
-                                            style: Styles.normal16
-                                                .copyWith(color: Colors.grey),
-                                          )
-                                        : ListView.builder(
-                                            shrinkWrap: true,
-                                            itemCount: selectedUsers.length,
-                                            itemBuilder: (context, index) {
-                                              return AddPlayerItem(
-                                                selectedUsers: selectedUsers,
-                                                index: index,
-                                                onPressed: () {
-                                                  setState(() {
-                                                    selectedUsers
-                                                        .removeAt(index);
-                                                  });
+                                      ),
+                                      const SizedBox(width: 20),
+                                      SizedBox(
+                                        width: constraints.maxWidth * .38,
+                                        child: selectedUsers.isEmpty
+                                            ? Center(
+                                                child: Text(
+                                                  "No player selected",
+                                                  style: Styles.normal16
+                                                      .copyWith(
+                                                          color: Colors.grey),
+                                                ),
+                                              )
+                                            : ListView.builder(
+                                                physics:
+                                                    const NeverScrollableScrollPhysics(),
+                                                shrinkWrap: true,
+                                                itemCount: selectedUsers.length,
+                                                itemBuilder: (context, index) {
+                                                  return AddPlayerItem(
+                                                    selectedUsers:
+                                                        selectedUsers,
+                                                    index: index,
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        selectedUsers
+                                                            .removeAt(index);
+                                                      });
+                                                    },
+                                                  );
                                                 },
-                                              );
-                                            },
-                                          ),
-                                  ],
-                                ),
+                                              ),
+                                      ),
+                                    ],
+                                  );
+                                },
                               ),
-                            );
-                          }
-                          return const Center(
-                            child: CustomLoadingIndicator(),
-                          );
-                        },
+                            ],
+                          ),
+                        ),
                       ),
                     ],
                   ),
                 ),
+              ),
+            ),
+          );
+        }
+        return const CustomLoadingIndicator();
+      },
+    );
+  }
+}
+
+class PlayerItem extends StatelessWidget {
+  const PlayerItem({super.key, required this.user, this.onTap});
+
+  final UserInformation user;
+  final void Function()? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: Material(
+        child: InkWell(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Column(
+              children: [
                 const SizedBox(
-                  width: 20,
+                  width: 80,
+                  height: 80,
+                  child: CircleAvatar(
+                    foregroundImage: AssetImage(AppAssets.logo),
+                  ),
                 ),
-                Column(
-                  children: [
-                    Container(
-                      height: 340,
-                      width: 300,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
+                const SizedBox(height: 10),
+                Expanded(
+                  child: Column(
+                    children: [
+                      Text(
+                        user.displayName,
+                        style: Styles.normal16,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(15),
-                        child: Column(
-                          children: [
-                            Text(
-                              'League picture',
-                              style: Styles.normal18,
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            image == null
-                                ? InkWell(
-                                    onTap: () async {
-                                      try {
-                                        final ImagePicker picker =
-                                            ImagePicker();
-                                        image = await picker.pickImage(
-                                            source: ImageSource.gallery);
-                                        setState(() {});
-                                        // ignore: empty_catches
-                                      } catch (e) {}
-                                    },
-                                    child: Container(
-                                      height: 50,
-                                      width: 50,
-                                      decoration: const BoxDecoration(
-                                        color: Colors.black,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: const Icon(
-                                        Icons.add,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  )
-                                : Column(
-                                    children: [
-                                      Image.file(
-                                        File(image!.path),
-                                        fit: BoxFit.fill,
-                                        height: 180,
-                                        width: 250,
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      IconButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            image = null;
-                                          });
-                                        },
-                                        icon: const Icon(Icons.delete),
-                                      )
-                                    ],
-                                  ),
-                          ],
+                      Expanded(
+                        child: Text(
+                          user.email,
+                          style: Styles.normal12.copyWith(color: Colors.grey),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    CustomButton(
-                      onPressed: () {
-                        if (image == null) {
-                          myShowToastError(context, "Select an image");
-                        } else if (formKey.currentState!.validate()) {
-                          BlocProvider.of<LeaguesCubit>(context).addLeague(
-                            titleController.text,
-                            startDate,
-                            selectedUsers,
-                            int.parse(totalPlayersController.text),
-                            isHomeAndAway,
-                            image,
-                          );
-                          setState(() {
-                            titleController.clear();
-                            totalPlayersController.clear();
-                            image = null;
-                          });
-                        }
-                      },
-                      title: "Add",
-                      backgroundColor: AppColors.kPrimaryColor,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
