@@ -4,7 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:pmf_admin/core/utils/models/fixture_model.dart';
 import 'package:pmf_admin/core/utils/models/player_model.dart';
 import 'package:pmf_admin/features/leagues/data/model/league_model.dart';
-import 'package:pmf_admin/features/users/data/models/users_model.dart';
+import 'package:pmf_admin/features/users/data/models/user_info_model.dart';
 
 abstract class LeaguesRepo {
   Future<Either<Failure, List<League>>> getLeagues();

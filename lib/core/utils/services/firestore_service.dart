@@ -2,10 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pmf_admin/core/utils/models/fixture_model.dart';
 import 'package:pmf_admin/core/utils/models/player_model.dart';
 import 'package:pmf_admin/features/leagues/data/model/league_model.dart';
-import 'package:pmf_admin/features/users/data/models/users_model.dart';
+import 'package:pmf_admin/features/users/data/models/user_info_model.dart';
 
 class FirestoreService {
   final String playersCollection = "players";
+  final String participations = "participations";
   CollectionReference leagues =
       FirebaseFirestore.instance.collection('leagues');
   CollectionReference users = FirebaseFirestore.instance.collection('users');
@@ -87,6 +88,7 @@ class FirestoreService {
           .collection(playersCollection)
           .doc(p.id)
           .set(p.toJson());
+      await addParticipationId(p.id, league.id);
     }
   }
 
@@ -109,6 +111,10 @@ class FirestoreService {
         batch.delete(doc.reference);
       }
       await batch.commit();
+    }
+    List<Player> players = await getPlayers(league);
+    for (var player in players) {
+      await deleteParticipationId(player.id, league.id);
     }
     await leagues.doc(league.id).delete();
   }
@@ -139,6 +145,19 @@ class FirestoreService {
     });
     player = Player.fromJson(data);
     return player;
+  }
+
+  Future<void> addParticipationId(String userId, String participationId) async {
+    users.doc(userId).update({
+      participations: FieldValue.arrayUnion([participationId])
+    });
+  }
+
+  Future<void> deleteParticipationId(
+      String userId, String participationId) async {
+    users.doc(userId).update({
+      participations: FieldValue.arrayRemove([participationId])
+    });
   }
 
   Future<void> stockRounds(
@@ -305,4 +324,29 @@ class FirestoreService {
     // Check if the round is complete
     await checkIsRoundComplete(league, oldFixture.round);
   }
+}
+
+//---------TEST----------
+//---------TEST----------
+//---------TEST----------
+Future<void> addParticipationsFieldToUsers() async {
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  // Get all users from the players collection
+  var usersSnapshot = await firestore.collection('users').get();
+
+  for (var doc in usersSnapshot.docs) {
+    var userData = doc.data();
+
+    // Check if the participations field is missing
+    if (!userData.containsKey('participations')) {
+      // Add an empty participations field
+      await firestore.collection('users').doc(doc.id).update({
+        'participations': [] // Set an empty array for participations
+      });
+    }
+  }
+
+  // ignore: avoid_print
+  print("All users updated with participations field.");
 }

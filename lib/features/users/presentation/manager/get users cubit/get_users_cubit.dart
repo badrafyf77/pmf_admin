@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pmf_admin/features/users/data/models/users_model.dart';
+import 'package:pmf_admin/features/users/data/models/user_info_model.dart';
 import 'package:pmf_admin/features/users/data/repo/users_repo.dart';
 
 part 'get_users_state.dart';

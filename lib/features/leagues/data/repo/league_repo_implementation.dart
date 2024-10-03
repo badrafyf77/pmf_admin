@@ -10,7 +10,7 @@ import 'package:pmf_admin/core/utils/services/firestore_service.dart';
 import 'package:pmf_admin/core/utils/failures.dart';
 import 'package:pmf_admin/features/leagues/data/repo/league_repo.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:pmf_admin/features/users/data/models/users_model.dart';
+import 'package:pmf_admin/features/users/data/models/user_info_model.dart';
 import 'package:uuid/uuid.dart';
 
 class LeaguesRepoImplementation implements LeaguesRepo {

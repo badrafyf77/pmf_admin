@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:pmf_admin/core/utils/failures.dart';
 import 'package:pmf_admin/core/utils/services/firestore_service.dart';
-import 'package:pmf_admin/features/users/data/models/users_model.dart';
+import 'package:pmf_admin/features/users/data/models/user_info_model.dart';
 import 'package:pmf_admin/features/users/data/repo/users_repo.dart';
 
 class UsersRepoImplementation implements UsersRepo {

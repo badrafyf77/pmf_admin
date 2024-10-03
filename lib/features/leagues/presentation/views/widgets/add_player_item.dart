@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pmf_admin/core/utils/styles.dart';
-import 'package:pmf_admin/features/users/data/models/users_model.dart';
+import 'package:pmf_admin/features/users/data/models/user_info_model.dart';
 
 class AddPlayerItem extends StatelessWidget {
   const AddPlayerItem({

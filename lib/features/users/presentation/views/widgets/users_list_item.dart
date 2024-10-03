@@ -5,7 +5,7 @@ import 'package:pmf_admin/core/utils/customs/button.dart';
 import 'package:pmf_admin/core/utils/customs/cashed_network_image.dart';
 import 'package:pmf_admin/core/utils/customs/manage_buttons.dart';
 import 'package:pmf_admin/core/utils/styles.dart';
-import 'package:pmf_admin/features/users/data/models/users_model.dart';
+import 'package:pmf_admin/features/users/data/models/user_info_model.dart';
 
 class UserItem extends StatelessWidget {
   const UserItem({super.key, required this.userInformation});

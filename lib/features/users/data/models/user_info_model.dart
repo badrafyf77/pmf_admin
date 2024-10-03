@@ -11,7 +11,7 @@ class UserInformation {
   final int wins;
   final int draws;
   final int losses;
-  
+  final List<String> participations;
 
   UserInformation({
     required this.id,
@@ -24,7 +24,7 @@ class UserInformation {
     required this.wins,
     required this.draws,
     required this.losses,
-    
+    required this.participations,
   });
 
   UserInformation.fromJson(json)
@@ -39,6 +39,7 @@ class UserInformation {
           wins: json['wins'] as int,
           draws: json['draws'] as int,
           losses: json['losses'] as int,
+          participations: List<String>.from(json['participations'] ?? []),
         );
 
   Map<String, dynamic> toJson() {
@@ -53,6 +54,7 @@ class UserInformation {
       'wins': wins,
       'draws': draws,
       'losses': losses,
+      'participations': participations,
     };
   }
 }
