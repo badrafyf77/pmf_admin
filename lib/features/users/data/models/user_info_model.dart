@@ -4,7 +4,6 @@ class UserInformation {
   final String id;
   final String displayName;
   final String email;
-  final String password;
   final Timestamp joinedDate;
   final int leagueRanking;
   final int played;
@@ -17,7 +16,6 @@ class UserInformation {
     required this.id,
     required this.displayName,
     required this.email,
-    required this.password,
     required this.joinedDate,
     required this.leagueRanking,
     required this.played,
@@ -32,7 +30,6 @@ class UserInformation {
           id: json['id'] as String,
           displayName: json['displayName'] as String,
           email: json['email'] as String,
-          password: json['password'] as String,
           joinedDate: json['joinedDate'] as Timestamp,
           leagueRanking: json['leagueRanking'] as int,
           played: json['played'] as int,
@@ -47,7 +44,6 @@ class UserInformation {
       'id': id,
       'displayName': displayName,
       'email': email,
-      'password': password,
       'joinedDate': joinedDate,
       'leagueRanking': leagueRanking,
       'played': played,

@@ -354,9 +354,7 @@ class _AddLeagueBodyState extends State<AddLeagueBody> {
                                             CustomTextField(
                                               controller: searchController,
                                               onChanged: (value) {
-                                                setState(() {
                                                   searchQuery.value = value;
-                                                });
                                               },
                                               validator: (value) {
                                                 return null;

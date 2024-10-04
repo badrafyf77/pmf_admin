@@ -22,4 +22,5 @@ class UsersRepoImplementation implements UsersRepo {
       return left(FirestoreFailure(errMessage: e.toString()));
     }
   }
+
 }

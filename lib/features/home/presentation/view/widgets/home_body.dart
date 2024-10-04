@@ -24,7 +24,8 @@ class HomeBody extends StatelessWidget {
                     DashboardItem(
                       title: 'Number of leagues',
                       nmbr: 2,
-                      onTap: () {},
+                      onTap: () async {
+                      },
                     ),
                     DashboardItem(
                       title: 'Number of cups',

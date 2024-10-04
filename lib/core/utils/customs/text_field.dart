@@ -9,7 +9,7 @@ class CustomTextField extends StatelessWidget {
     this.isPass = false,
     this.isTextArea = false,
     this.isMatchResult = false,
-    required this.controller,
+    this.controller,
     required this.validator,
     this.hintText,
     this.width, this.onChanged,
@@ -18,7 +18,7 @@ class CustomTextField extends StatelessWidget {
   final bool isPass;
   final bool isTextArea;
   final bool isMatchResult;
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
   final String? hintText;

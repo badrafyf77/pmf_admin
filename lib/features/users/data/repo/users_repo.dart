@@ -4,4 +4,5 @@ import 'package:pmf_admin/features/users/data/models/user_info_model.dart';
 
 abstract class UsersRepo {
   Future<Either<Failure, List<UserInformation>>> getUsers();
+  // Future<Either<Failure, Unit>> deteleUser();
 }

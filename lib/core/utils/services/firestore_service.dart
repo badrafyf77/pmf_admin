@@ -348,5 +348,33 @@ Future<void> addParticipationsFieldToUsers() async {
   }
 
   // ignore: avoid_print
-  print("All users updated with participations field.");
+  print("Complete");
+}
+
+Future<void> convertEmailsToLowerCase() async {
+  // Reference to Firestore 'users' collection
+  CollectionReference usersCollection =
+      FirebaseFirestore.instance.collection('users');
+
+  // Get all documents in the collection
+  QuerySnapshot snapshot = await usersCollection.get();
+
+  // Iterate through each document
+  for (QueryDocumentSnapshot document in snapshot.docs) {
+    Map<String, dynamic> userData = document.data() as Map<String, dynamic>;
+
+    // Check if email field exists and is a string
+    if (userData.containsKey('email') && userData['email'] is String) {
+      String email = userData['email'];
+
+      // Convert the email to lowercase
+      String lowerCaseEmail = email.toLowerCase();
+
+      // Update the document with the lowercase email
+      await usersCollection.doc(document.id).update({'email': lowerCaseEmail});
+    }
+  }
+
+  // ignore: avoid_print
+  print("Complete");
 }
