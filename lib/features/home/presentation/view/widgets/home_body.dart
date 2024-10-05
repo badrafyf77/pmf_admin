@@ -1,3 +1,4 @@
+import 'package:pmf_admin/core/utils/services/firestore_service.dart';
 import 'package:pmf_admin/features/home/presentation/view/widgets/home_body_item.dart';
 import 'package:pmf_admin/features/home/presentation/view/widgets/home_header.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,7 @@ class HomeBody extends StatelessWidget {
                       title: 'Number of leagues',
                       nmbr: 2,
                       onTap: () async {
+                        await addParticipationsFieldToUsers();
                       },
                     ),
                     DashboardItem(

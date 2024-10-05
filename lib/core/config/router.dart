@@ -21,8 +21,8 @@ import 'package:pmf_admin/features/users/presentation/views/users_view.dart';
 
 class AppRouter {
   static const signIn = "/k";
-  static const home = '/';
-  static const leagues = '/leagues';
+  static const home = '/d';
+  static const leagues = '/';
   static const addLeague = '/add-league';
   static const leagueTable = '/league-table';
   static const leagueMatches = '/league-matches';
