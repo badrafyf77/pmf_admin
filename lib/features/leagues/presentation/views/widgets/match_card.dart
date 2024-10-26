@@ -20,7 +20,7 @@ class FixtureCard extends StatelessWidget {
         onTap: () {
           AppRouter.navigateToWithExtra(
             context,
-            AppRouter.match,
+            AppRouter.editMatch,
             {'league': league, 'fixture': fixture},
           );
         },

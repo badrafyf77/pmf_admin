@@ -71,6 +71,16 @@ class LeaguesCubit extends Cubit<LeaguesState> {
     });
   }
 
+  Future<void> changePlayer(League league, UserInformation newUser, Player oldPlayer) async {
+    emit(Leagueslaoding());
+    var result = await _leaguesRepo.changePlayer(league, newUser, oldPlayer);
+    result.fold((left) {
+      emit(LeaguesFailure(err: left.errMessage));
+    }, (right) {
+      emit(LeaguesSuccess());
+    });
+  }
+
   Future<void> getMatches(League league, int round) async {
     emit(Leagueslaoding());
     var result = await _leaguesRepo.getMatches(league, round);

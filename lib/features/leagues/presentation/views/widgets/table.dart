@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:pmf_admin/core/config/router.dart';
 import 'package:pmf_admin/core/utils/colors.dart';
+import 'package:pmf_admin/core/utils/customs/custom_text_button.dart';
 import 'package:pmf_admin/core/utils/models/player_model.dart';
 import 'package:pmf_admin/core/utils/styles.dart';
+import 'package:pmf_admin/features/leagues/data/model/league_model.dart';
 
 class StandingTable extends StatelessWidget {
-  const StandingTable({super.key, required this.playersList});
+  const StandingTable(
+      {super.key, required this.league, required this.playersList});
 
+  final League league;
   final List<Player> playersList;
 
   @override
@@ -100,8 +105,9 @@ class StandingTable extends StatelessWidget {
             ),
           ),
           DataCell(
-            CellRowItem(
-              title: p.displayName,
+            CellRowTextButton(
+              league: league,
+              player: p,
             ),
           ),
           DataCell(
@@ -201,6 +207,40 @@ class CellRowItem extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CellRowTextButton extends StatelessWidget {
+  const CellRowTextButton({
+    super.key,
+    required this.player,
+    required this.league,
+  });
+
+  final League league;
+  final Player player;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox.expand(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 3),
+        child: Align(
+          alignment: Alignment.center,
+          child: CustomTextButton(
+            text: player.displayName,
+            fontColor: Colors.black,
+            onpressed: () {
+              AppRouter.navigateToWithExtra(
+                context,
+                AppRouter.changePlayer,
+                {'league': league, 'player': player},
+              );
+            },
           ),
         ),
       ),

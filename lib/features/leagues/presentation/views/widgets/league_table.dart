@@ -36,11 +36,17 @@ class _LeagueTableState extends State<LeagueTable> {
       },
       builder: (context, state) {
         if (state is GetPlayersSuccess) {
-          return StandingTable(playersList: state.playersList);
+          return StandingTable(
+            league: widget.league,
+            playersList: state.playersList,
+          );
         }
         return Skeletonizer(
           enabled: true,
-          child: StandingTable(playersList: fakePlayers),
+          child: StandingTable(
+            league: widget.league,
+            playersList: fakePlayers,
+          ),
         );
       },
     );

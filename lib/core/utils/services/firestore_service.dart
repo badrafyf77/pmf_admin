@@ -71,24 +71,7 @@ class FirestoreService {
   Future<void> addLeague(League league, List<UserInformation> usersList) async {
     await leagues.doc(league.id).set(league.toJson());
     for (var element in usersList) {
-      Player p = Player(
-        id: element.id,
-        displayName: element.displayName,
-        played: 0,
-        wins: 0,
-        draws: 0,
-        losses: 0,
-        scored: 0,
-        conceded: 0,
-        goalDef: 0,
-        pts: 0,
-      );
-      await leagues
-          .doc(league.id)
-          .collection(playersCollection)
-          .doc(p.id)
-          .set(p.toJson());
-      await addParticipationId(p.id, league.id);
+      await addPlayer(league.id, element);
     }
   }
 
@@ -147,6 +130,87 @@ class FirestoreService {
     return player;
   }
 
+  Future<void> addPlayer(String leagueId, UserInformation user,
+      {Player? oldPlayer}) async {
+    Player p;
+    if (oldPlayer == null) {
+      p = Player(
+        id: user.id,
+        displayName: user.displayName,
+        played: 0,
+        wins: 0,
+        draws: 0,
+        losses: 0,
+        scored: 0,
+        conceded: 0,
+        goalDef: 0,
+        pts: 0,
+      );
+    } else {
+      p = Player(
+        id: user.id,
+        displayName: user.displayName,
+        played: oldPlayer.played,
+        wins: oldPlayer.wins,
+        draws: oldPlayer.draws,
+        losses: oldPlayer.losses,
+        scored: oldPlayer.scored,
+        conceded: oldPlayer.conceded,
+        goalDef: oldPlayer.goalDef,
+        pts: oldPlayer.pts,
+      );
+    }
+    await leagues
+        .doc(leagueId)
+        .collection(playersCollection)
+        .doc(p.id)
+        .set(p.toJson());
+    await addParticipationId(p.id, leagueId);
+  }
+
+  Future<void> deletePlayer(String leagueId, String playerId) async {
+    await leagues
+        .doc(leagueId)
+        .collection(playersCollection)
+        .doc(playerId)
+        .delete();
+  }
+
+  Future<void> changePlayer(
+      League league, UserInformation newUser, Player oldPlayer) async {
+    //nbedel id o smiya f ga3 rounds
+    int maxRounds = (league.totalPlayers - 1) * (league.isHomeAndAway ? 2 : 1);
+    for (var i = 1; i <= maxRounds; i++) {
+      List<Fixture> fixtures = await getMatches(league, i);
+      for (var element in fixtures) {
+        if (!element.isPlayed) {
+          if (element.homeId == oldPlayer.id) {
+            await leagues
+                .doc(league.id)
+                .collection('round-$i')
+                .doc(element.id)
+                .update({
+              'homeId': newUser.id,
+              'homeName': newUser.displayName,
+            });
+          } else if (element.awayId == oldPlayer.id) {
+            await leagues
+                .doc(league.id)
+                .collection('round-$i')
+                .doc(element.id)
+                .update({
+              'awayId': newUser.id,
+              'awayName': newUser.displayName,
+            });
+          }
+        }
+      }
+    }
+    //nbedel player db mn league
+    await deletePlayer(league.id, oldPlayer.id);
+    await addPlayer(league.id, newUser, oldPlayer: oldPlayer);
+  }
+
   Future<void> addParticipationId(String userId, String participationId) async {
     users.doc(userId).update({
       participations: FieldValue.arrayUnion([participationId])
@@ -179,7 +243,9 @@ class FirestoreService {
   }
 
   Future<void> changeCurrentRound(League league, int round) async {
-    await leagues.doc(league.id).update({'currentRound': round});
+    if (round > league.currentRound) {
+      await leagues.doc(league.id).update({'currentRound': round});
+    }
   }
 
   Future<bool> checkIsRoundComplete(League league, int round) async {

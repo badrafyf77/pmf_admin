@@ -9,8 +9,8 @@ import 'package:pmf_admin/features/leagues/data/model/league_model.dart';
 import 'package:pmf_admin/features/leagues/presentation/manager/cubit/leagues_cubit.dart';
 import 'package:pmf_admin/features/leagues/presentation/views/widgets/match_body.dart';
 
-class MatchView extends StatelessWidget {
-  const MatchView({super.key, required this.fixture, required this.league});
+class EditMatchView extends StatelessWidget {
+  const EditMatchView({super.key, required this.fixture, required this.league});
 
   final League league;
   final Fixture fixture;

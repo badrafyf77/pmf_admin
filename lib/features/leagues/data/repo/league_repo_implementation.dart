@@ -188,13 +188,50 @@ class LeaguesRepoImplementation implements LeaguesRepo {
   }
 
   @override
-  Future<Either<Failure, Map<String,dynamic>>> editMatch(
+  Future<Either<Failure, Map<String, dynamic>>> editMatch(
       League league, Fixture fixture, int homeGoals, int awayGoals) async {
     try {
-      await _firestoreService.editFixture(
-          league, fixture, homeGoals, awayGoals);
-          League l = await _firestoreService.getLeague(league.id);
-      return right({'league': l, 'round': fixture.round},);
+      List<Player> players = await _firestoreService.getPlayers(league);
+      bool isHomeExist = false;
+      bool isAwayExist = false;
+      for (var player in players) {
+        if (fixture.homeId == player.id) {
+          isHomeExist = true;
+        }
+        if (fixture.awayId == player.id) {
+          isAwayExist = true;
+        }
+      }
+      if (!isHomeExist || !isAwayExist) {
+        return left(
+            FirestoreFailure(errMessage: "You cannot edit this fixture"));
+      } else {
+        await _firestoreService.editFixture(
+            league, fixture, homeGoals, awayGoals);
+        League l = await _firestoreService.getLeague(league.id);
+        return right(
+          {'league': l, 'round': fixture.round},
+        );
+      }
+    } catch (e) {
+      if (e is FirebaseException) {
+        return left(FirestoreFailure.fromFirestoreFailure(e));
+      }
+      return left(FirestoreFailure(errMessage: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> changePlayer(
+      League league, UserInformation newUser, Player oldPlayer) async {
+    try {
+      UserInformation oldUser = await _firestoreService.getUser(oldPlayer.id);
+      if (oldUser.participations.isEmpty) {
+        return left(FirestoreFailure(errMessage: "You cannot add this user"));
+      } else {
+        await _firestoreService.changePlayer(league, newUser, oldPlayer);
+      }
+      return right(unit);
     } catch (e) {
       if (e is FirebaseException) {
         return left(FirestoreFailure.fromFirestoreFailure(e));
