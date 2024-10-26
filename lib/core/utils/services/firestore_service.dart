@@ -174,6 +174,7 @@ class FirestoreService {
         .collection(playersCollection)
         .doc(playerId)
         .delete();
+    await deleteParticipationId(playerId, leagueId);
   }
 
   Future<void> changePlayer(
