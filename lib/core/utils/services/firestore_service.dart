@@ -80,33 +80,26 @@ class FirestoreService {
   }
 
   Future<void> deleteLeague(League league) async {
-    var playersSnapshots =
-        await leagues.doc(league.id).collection(playersCollection).get();
-    for (var doc in playersSnapshots.docs) {
-      await doc.reference.delete();
-    }
-    if (league.currentRound > 0) {
-      final instance = FirebaseFirestore.instance;
-      final batch = instance.batch();
-      var collection = leagues.doc(league.id).collection(playersCollection);
-      var roundsSnapshots = await collection.get();
-      for (var doc in roundsSnapshots.docs) {
-        batch.delete(doc.reference);
-      }
-      await batch.commit();
-    }
-    List<Player> players = await getPlayers(league);
+    List<Player> players = await getPlayers(league.id);
     for (var player in players) {
-      await deleteParticipationId(player.id, league.id);
+      await deletePlayer(league.id, player.id);
+    }
+    int maxRounds = (league.totalPlayers - 1) * (league.isHomeAndAway ? 2 : 1);
+    for (var i = 1; i <= maxRounds; i++) {
+      var matches = leagues.doc(league.id).collection('round-$i');
+      var snapshots = await matches.get();
+      for (var doc in snapshots.docs) {
+        await doc.reference.delete();
+      }
     }
     await leagues.doc(league.id).delete();
   }
 
-  Future<List<Player>> getPlayers(League league) async {
+  Future<List<Player>> getPlayers(String leagueID) async {
     List<Player> playersList = [];
 
     var snapshot =
-        await leagues.doc(league.id).collection(playersCollection).get();
+        await leagues.doc(leagueID).collection(playersCollection).get();
 
     for (var doc in snapshot.docs) {
       playersList.add(Player.fromJson(doc.data()));
@@ -275,7 +268,7 @@ class FirestoreService {
       pts += 3;
     } else if (playerGoals < oppoGoals) {
       losses += 1;
-    } else {
+    } else if (playerGoals == oppoGoals) {
       draws += 1;
       pts += 1;
     }

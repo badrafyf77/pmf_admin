@@ -121,7 +121,7 @@ class LeaguesRepoImplementation implements LeaguesRepo {
   @override
   Future<Either<Failure, List<Player>>> getPlayers(League league) async {
     try {
-      var playersList = await _firestoreService.getPlayers(league);
+      var playersList = await _firestoreService.getPlayers(league.id);
       return right(playersList);
     } catch (e) {
       if (e is FirebaseException) {
@@ -134,7 +134,7 @@ class LeaguesRepoImplementation implements LeaguesRepo {
   @override
   Future<Either<Failure, League>> genarateMatches(League league) async {
     try {
-      List<Player> playersList = await _firestoreService.getPlayers(league);
+      List<Player> playersList = await _firestoreService.getPlayers(league.id);
       List<Fixture> generatedFixtures =
           generateFixtures(playersList, league.isHomeAndAway);
 
@@ -163,6 +163,8 @@ class LeaguesRepoImplementation implements LeaguesRepo {
   Future<Either<Failure, Unit>> deleteLeague(League league) async {
     try {
       await _firestoreService.deleteLeague(league);
+      await _firestorageService.deleteFile(
+          _firestorageService.leaguesFolderName, league.title);
       return right(unit);
     } catch (e) {
       if (e is FirebaseException) {
@@ -191,7 +193,7 @@ class LeaguesRepoImplementation implements LeaguesRepo {
   Future<Either<Failure, Map<String, dynamic>>> editMatch(
       League league, Fixture fixture, int homeGoals, int awayGoals) async {
     try {
-      List<Player> players = await _firestoreService.getPlayers(league);
+      List<Player> players = await _firestoreService.getPlayers(league.id);
       bool isHomeExist = false;
       bool isAwayExist = false;
       for (var player in players) {
@@ -225,8 +227,7 @@ class LeaguesRepoImplementation implements LeaguesRepo {
   Future<Either<Failure, Unit>> changePlayer(
       League league, UserInformation newUser, Player oldPlayer) async {
     try {
-      UserInformation oldUser = await _firestoreService.getUser(oldPlayer.id);
-      if (oldUser.participations.isEmpty) {
+      if (newUser.participations.isNotEmpty) {
         return left(FirestoreFailure(errMessage: "You cannot add this user"));
       } else {
         await _firestoreService.changePlayer(league, newUser, oldPlayer);

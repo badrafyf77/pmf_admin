@@ -1,10 +1,8 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pmf_admin/core/config/router.dart';
 import 'package:pmf_admin/core/utils/customs/cashed_network_image.dart';
 import 'package:pmf_admin/core/utils/customs/manage_buttons.dart';
 import 'package:pmf_admin/features/leagues/data/model/league_model.dart';
 import 'package:flutter/material.dart';
-import 'package:pmf_admin/features/leagues/presentation/manager/cubit/leagues_cubit.dart';
 import 'package:pmf_admin/features/leagues/presentation/views/widgets/league_image_and_info.dart';
 
 class LeagueItem extends StatelessWidget {
@@ -58,13 +56,13 @@ class LeagueItem extends StatelessWidget {
                             context, AppRouter.editLeague, league);
                       },
                     ),
-                    const SizedBox(width: 5),
-                    DeleteButton(
-                      onPressed: () {
-                        BlocProvider.of<LeaguesCubit>(context)
-                            .deleteLeague(league);
-                      },
-                    ),
+                    // const SizedBox(width: 5),
+                    // DeleteButton(
+                    //   onPressed: () {
+                    //     BlocProvider.of<LeaguesCubit>(context)
+                    //         .deleteLeague(league);
+                    //   },
+                    // ),
                   ],
                 ),
               ),
