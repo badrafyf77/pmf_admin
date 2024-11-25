@@ -48,7 +48,7 @@ class AppDrawerState extends State<AppDrawer> {
                 // const SizedBox(
                 //   height: 40,
                 // ),
-                // drawerItem(context, 5, 'Trophies', Icons.mail),
+                // drawerItem(context, 2, 'Treasury', Icons.abc),
               ],
             ),
           )
@@ -65,15 +65,12 @@ class AppDrawerState extends State<AppDrawer> {
       case 1:
         GoRouter.of(context).go(AppRouter.leagues);
         break;
-      // case 3:
-      //   // GoRouter.of(context).go(AppRouter.activities);
-      //   break;
-      // case 4:
-      //   GoRouter.of(context).go(AppRouter.users);
-      //   break;
-      case 5:
-        // GoRouter.of(context).go(AppRouter.messages);
+      case 2:
+        GoRouter.of(context).go(AppRouter.treasury);
         break;
+      // case 5:
+      // GoRouter.of(context).go(AppRouter.messages);
+      // break;
     }
     setState(() {
       currentIndex = index;

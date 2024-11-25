@@ -17,6 +17,7 @@ import 'package:pmf_admin/features/home/presentation/view/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pmf_admin/features/leagues/presentation/views/edit_match_view.dart';
+import 'package:pmf_admin/features/treasury/presentation/views/treasury_view.dart';
 import 'package:pmf_admin/features/users/data/repo/users_repo_implementation.dart';
 import 'package:pmf_admin/features/users/presentation/manager/get%20users%20cubit/get_users_cubit.dart';
 import 'package:pmf_admin/features/users/presentation/views/users_view.dart';
@@ -32,6 +33,7 @@ class AppRouter {
   static const editMatch = '/edit-match';
   static const changePlayer = '/change-player';
   static const users = '/users';
+  static const treasury = '/treasury';
 
   static final router = GoRouter(
     routes: [
@@ -190,6 +192,12 @@ class AppRouter {
                 )..getUsers(),
                 child: const UsersView(),
               ),
+            ),
+          ),
+          GoRoute(
+            path: treasury,
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: TreasuryView(),
             ),
           ),
         ],

@@ -8,41 +8,39 @@ import 'package:pmf_admin/features/leagues/presentation/views/widgets/league_ima
 import 'package:pmf_admin/features/leagues/presentation/views/widgets/league_matches.dart';
 
 class LeagueMatchesView extends StatelessWidget {
-  const LeagueMatchesView({super.key, required this.league, required this.round});
+  const LeagueMatchesView(
+      {super.key, required this.league, required this.round});
 
   final League league;
   final int round;
 
   @override
   Widget build(BuildContext context) {
-    return ScrollConfiguration(
-      behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: ListView(
-          children: [
-            NavigateBackIcon(
-              title: 'Manage league',
-              onPressed: () {
-                AppRouter.navigateTo(context, AppRouter.leagues);
-              },
-            ),
-            LeagueImageAndInfo(league: league),
-            league.currentRound == 0
-                ? GenerateMatches(league: league)
-                : Column(
-                    children: [
-                      LeagueBar(
-                        league: league,
-                        isMatchesSelected: true,
-                      ),
-                      LeagueMatches(
-                        league: league,
-                      ),
-                    ],
-                  ),
-          ],
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: ListView(
+        children: [
+          NavigateBackIcon(
+            title: 'Manage league',
+            onPressed: () {
+              AppRouter.navigateTo(context, AppRouter.leagues);
+            },
+          ),
+          LeagueImageAndInfo(league: league),
+          league.currentRound == 0
+              ? GenerateMatches(league: league)
+              : Column(
+                  children: [
+                    LeagueBar(
+                      league: league,
+                      isMatchesSelected: true,
+                    ),
+                    LeagueMatches(
+                      league: league,
+                    ),
+                  ],
+                ),
+        ],
       ),
     );
   }

@@ -45,14 +45,14 @@ class _LeaguesListState extends State<LeaguesList> {
           return Column(
             children: [
               Header(
-            buttonTitle: "Add league",
-            onPressedButton: () {
-              AppRouter.navigateTo(context, AppRouter.addLeague);
-            },
-            onPressedRefresh: () {
-              BlocProvider.of<LeaguesCubit>(context).getLeagues();
-            },
-          ),
+                buttonTitle: "Add league",
+                onPressedButton: () {
+                  AppRouter.navigateTo(context, AppRouter.addLeague);
+                },
+                onPressedRefresh: () {
+                  BlocProvider.of<LeaguesCubit>(context).getLeagues();
+                },
+              ),
               state.leaguesList.isEmpty
                   ? Center(
                       child: Padding(
@@ -64,24 +64,20 @@ class _LeaguesListState extends State<LeaguesList> {
                       ),
                     )
                   : Expanded(
-                      child: ScrollConfiguration(
-                        behavior: ScrollConfiguration.of(context)
-                            .copyWith(scrollbars: false),
-                        child: ListView.builder(
-                          itemCount: state.leaguesList.length,
-                          itemBuilder: (context, index) {
-                            return Column(
-                              children: [
-                                LeagueItem(
-                                  league: state.leaguesList[index],
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                              ],
-                            );
-                          },
-                        ),
+                      child: ListView.builder(
+                        itemCount: state.leaguesList.length,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              LeagueItem(
+                                league: state.leaguesList[index],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                            ],
+                          );
+                        },
                       ),
                     ),
             ],
