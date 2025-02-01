@@ -1,7 +1,7 @@
 import 'package:board_datetime_picker/board_datetime_picker.dart';
 import 'package:pmf_admin/core/utils/colors.dart';
 import 'package:pmf_admin/core/utils/assets.dart';
-import 'package:pmf_admin/features/home/presentation/manager/get%20events%20week%20info%20bloc/get_events_week_info_bloc.dart';
+import 'package:pmf_admin/features/home/presentation/manager/bloc/get_home_info_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:pmf_admin/core/utils/styles.dart';
 import 'package:pmf_admin/features/home/presentation/view/widgets/bar_chart.dart';
@@ -76,7 +76,7 @@ class _AnalyticHeaderState extends State<AnalyticHeader> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Nombre de visites sur le site',
+            'Number of visits to the website',
             style: Styles.normal16,
           ),
           TextButton(
@@ -95,8 +95,8 @@ class _AnalyticHeaderState extends State<AnalyticHeader> {
                 _date = selected;
               });
               // ignore: use_build_context_synchronously
-              BlocProvider.of<GetEventsWeekInfoBloc>(context)
-                  .add(GetEventsWeekInfo(date: _date));
+              BlocProvider.of<GetHomeInfoBloc>(context)
+                  .add(GetHomeInfo(date: _date));
             },
             child: Text(
               BoardDateFormat('MM-yyyy').format(_date),

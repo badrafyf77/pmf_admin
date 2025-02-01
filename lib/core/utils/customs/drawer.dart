@@ -32,11 +32,11 @@ class AppDrawerState extends State<AppDrawer> {
                 const SizedBox(
                   height: 20,
                 ),
-                // drawerItem(context, 1, 'Dashboard', Icons.dashboard),
-                // const SizedBox(
-                //   height: 40,
-                // ),
-                drawerItem(context, 1, 'Leagues', Icons.event),
+                drawerItem(context, 1, 'Dashboard', Icons.dashboard),
+                const SizedBox(
+                  height: 40,
+                ),
+                drawerItem(context, 2, 'Leagues', Icons.event),
                 const SizedBox(
                   height: 40,
                 ),
@@ -63,13 +63,13 @@ class AppDrawerState extends State<AppDrawer> {
 
   _itemClick(BuildContext context, int index) {
     switch (index) {
-      // case 1:
-      //   GoRouter.of(context).go(AppRouter.home);
-      //   break;
       case 1:
-        GoRouter.of(context).go(AppRouter.leagues);
+        GoRouter.of(context).go(AppRouter.home);
         break;
       case 2:
+        GoRouter.of(context).go(AppRouter.leagues);
+        break;
+      case 3:
         GoRouter.of(context).go(AppRouter.cups);
         break;
       case 4:

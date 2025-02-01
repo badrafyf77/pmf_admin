@@ -15,6 +15,69 @@ class FirestoreService {
   CollectionReference users = FirebaseFirestore.instance.collection('users');
   CollectionReference visits = FirebaseFirestore.instance.collection('visits');
 
+  Future<int> countLeagues() async {
+    AggregateQuerySnapshot query = await leagues.count().get();
+    int i;
+    if (query.count != null) {
+      i = query.count!;
+      return i;
+    }
+    return 0;
+  }
+  Future<int> countUsers() async {
+    AggregateQuerySnapshot query = await users.count().get();
+    int i;
+    if (query.count != null) {
+      i = query.count!;
+      return i;
+    }
+    return 0;
+  }
+  Future<int> countPosts() async {
+    AggregateQuerySnapshot query = await posts.count().get();
+    int i;
+    if (query.count != null) {
+      i = query.count!;
+      return i;
+    }
+    return 0;
+  }
+  Future<List> getVisitsList(int month, int year) async {
+    String id = '$month-$year';
+    List v = [];
+    var doc = await visits.doc(id).get();
+    if (doc.exists) {
+      await visits.doc(id).get().then((value) async {
+        final docs = value.data()!;
+        final data = docs as Map<String, dynamic>;
+        v = data['visits'] as List;
+      });
+      return v;
+    }
+    return [];
+  }
+
+  Future<int> getMonthVisits() async {
+    int year = DateTime.now().year;
+    int month = DateTime.now().month;
+    String id = '$month-$year';
+    List v = [];
+    num x = 0;
+    var doc = await visits.doc(id).get();
+    if (doc.exists) {
+      await visits.doc(id).get().then((value) async {
+        final docs = value.data()!;
+        final data = docs as Map<String, dynamic>;
+        v = data['visits'] as List;
+      });
+      for (var i = 0; i < v.length; i++) {
+        x += v[i];
+      }
+      return x.toInt();
+    }
+    return 0;
+  }
+
   Future<List<UserInformation>> getUsers() async {
     List<UserInformation> usersList = [];
     await users.orderBy('joinedDate', descending: true).get().then((user) {

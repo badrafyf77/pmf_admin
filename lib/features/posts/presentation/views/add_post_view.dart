@@ -1,37 +1,58 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pmf_admin/core/config/router.dart';
 import 'package:pmf_admin/core/utils/colors.dart';
 import 'package:pmf_admin/core/utils/customs/button.dart';
+import 'package:pmf_admin/core/utils/customs/loading_indicator.dart';
 import 'package:pmf_admin/core/utils/customs/navigate_back_iconbutton.dart';
 import 'package:pmf_admin/core/utils/customs/text_field.dart';
 import 'package:pmf_admin/core/utils/helpers/show_toast.dart';
 import 'package:pmf_admin/core/utils/styles.dart';
+import 'package:pmf_admin/features/posts/presentation/manager/cubit/posts_cubit.dart';
 
 class AddPostView extends StatelessWidget {
   const AddPostView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        NavigateBackIcon(
-          title: 'Add Post',
-          onPressed: () {
-            AppRouter.navigateTo(context, AppRouter.posts);
-          },
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15),
-          child: AddPostBody(),
-        ),
-      ],
+    return BlocConsumer<PostsCubit, PostsState>(
+      listener: (context, state) {
+        if (state is PostsFailure) {
+          myShowToastError(context, state.err);
+        }
+        if (state is PostsSuccess) {
+          myShowToastSuccess(context, "Post added successfully!");
+          AppRouter.navigateTo(context, AppRouter.posts);
+        }
+      },
+      builder: (context, state) {
+        if (state is Postslaoding) {
+          return const Center(
+            child: CustomLoadingIndicator(withText: true),
+          );
+        }
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            NavigateBackIcon(
+              title: 'Add Post',
+              onPressed: () {
+                AppRouter.navigateTo(context, AppRouter.posts);
+              },
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: AddPostBody(),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -202,15 +223,11 @@ class _AddPostBodyState extends State<AddPostBody> {
                         if (image == null) {
                           myShowToastError(context, "Select an image");
                         } else if (formKey.currentState!.validate()) {
-                          // BlocProvider.of<LeaguesCubit>(context)
-                          //     .addLeague(
-                          //   titleController.text,
-                          //   startDate,
-                          //   selectedUsers,
-                          //   int.parse(totalPlayersController.text),
-                          //   isHomeAndAway,
-                          //   image,
-                          // );
+                          BlocProvider.of<PostsCubit>(context).addPost(
+                            descriptionController.text,
+                            DateTime.now(),
+                            image,
+                          );
                           setState(() {
                             descriptionController.clear();
                             image = null;

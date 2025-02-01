@@ -3,6 +3,8 @@ import 'package:pmf_admin/core/utils/models/fixture_model.dart';
 import 'package:pmf_admin/core/utils/models/player_model.dart';
 import 'package:pmf_admin/core/utils/service_locator.dart';
 import 'package:pmf_admin/features/cups/presentation/views/cups_view.dart';
+import 'package:pmf_admin/features/home/data/repo/home_repo_implementation.dart';
+import 'package:pmf_admin/features/home/presentation/manager/bloc/get_home_info_bloc.dart';
 import 'package:pmf_admin/features/leagues/data/model/league_model.dart';
 import 'package:pmf_admin/core/utils/customs/dashboard_screen.dart';
 import 'package:pmf_admin/features/auth/presentation/views/sign_in_view.dart';
@@ -18,6 +20,8 @@ import 'package:pmf_admin/features/home/presentation/view/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pmf_admin/features/leagues/presentation/views/edit_match_view.dart';
+import 'package:pmf_admin/features/posts/data/repo/posts_repo_implementation.dart';
+import 'package:pmf_admin/features/posts/presentation/manager/cubit/posts_cubit.dart';
 import 'package:pmf_admin/features/posts/presentation/views/add_post_view.dart';
 import 'package:pmf_admin/features/posts/presentation/views/posts_view.dart';
 import 'package:pmf_admin/features/treasury/presentation/views/treasury_view.dart';
@@ -27,8 +31,8 @@ import 'package:pmf_admin/features/users/presentation/views/users_view.dart';
 
 class AppRouter {
   static const signIn = "/k";
-  static const home = '/d';
-  static const leagues = '/';
+  static const home = '/';
+  static const leagues = '/leagues';
   static const addLeague = '/add-league';
   static const leagueTable = '/league-table';
   static const leagueMatches = '/league-matches';
@@ -56,8 +60,13 @@ class AppRouter {
         routes: [
           GoRoute(
             path: home,
-            pageBuilder: (context, state) => const NoTransitionPage(
-              child: HomeView(),
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: BlocProvider(
+                create: (BuildContext context) => GetHomeInfoBloc(
+                  getIt.get<HomeRepoImplementation>(),
+                ),
+                child: const HomeView(),
+              ),
             ),
           ),
           GoRoute(
@@ -214,14 +223,24 @@ class AppRouter {
           ),
           GoRoute(
             path: posts,
-            pageBuilder: (context, state) => const NoTransitionPage(
-              child: PostsView(),
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: BlocProvider(
+                create: (context) => PostsCubit(
+                  getIt.get<PostsRepoImplementation>(),
+                ),
+                child: const PostsView(),
+              ),
             ),
           ),
           GoRoute(
             path: addPost,
-            pageBuilder: (context, state) => const NoTransitionPage(
-              child: AddPostView(),
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: BlocProvider(
+                create: (context) => PostsCubit(
+                  getIt.get<PostsRepoImplementation>(),
+                ),
+                child: const AddPostView(),
+              ),
             ),
           ),
         ],
