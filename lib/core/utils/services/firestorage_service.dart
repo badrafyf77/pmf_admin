@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 class FirestorageService {
   final leaguesFolderName = "leagues";
+  final postsFolderName = "posts";
   Reference storageRef = FirebaseStorage.instance.ref();
 
   Future<String> uploadFile(

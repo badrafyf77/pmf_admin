@@ -1,5 +1,8 @@
+import 'package:board_datetime_picker/board_datetime_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:pmf_admin/core/config/router.dart';
 import 'package:pmf_admin/core/utils/customs/header.dart';
+import 'package:pmf_admin/core/utils/styles.dart';
 
 class PostsView extends StatelessWidget {
   const PostsView({super.key});
@@ -34,7 +37,9 @@ class _PostsListState extends State<PostsList> {
       children: [
         Header(
           buttonTitle: "Add Post",
-          onPressedButton: () {},
+          onPressedButton: () {
+            AppRouter.navigateTo(context, AppRouter.addPost);
+          },
           onPressedRefresh: () {},
         ),
         Expanded(
@@ -66,58 +71,63 @@ class PostItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       return Container(
-        height: 242,
+        width: constraints.maxWidth,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Padding(
           padding: const EdgeInsets.all(15),
-          child: Row(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: Container(
-                  width: constraints.maxWidth * .35,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-              SizedBox(
-                width: constraints.maxWidth * .57,
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.end,
+          child: Center(
+            child: Column(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Expanded(child: LeagueInfo(league: league)),
-                    // ManageButton(
-                    //   onPressed: () {
-                    //     AppRouter.navigateToWithExtra(
-                    //         context, AppRouter.leagueTable, league);
-                    //   },
-                    // ),
-                    // const SizedBox(width: 5),
-                    // EditButton(
-                    //   onPressed: () {
-                    //     AppRouter.navigateToWithExtra(
-                    //         context, AppRouter.editLeague, league);
-                    //   },
-                    // ),
-                    // const SizedBox(width: 5),
-                    // DeleteButton(
-                    //   onPressed: () {
-                    //     BlocProvider.of<LeaguesCubit>(context)
-                    //         .deleteLeague(league);
-                    //   },
-                    // ),
+                    Text(
+                      BoardDateFormat('yyyy/MM/dd HH:mm')
+                          .format(DateTime.now()),
+                      style: Styles.normal12.copyWith(color: Colors.grey),
+                    ),
+                    Text(
+                      'Quis autercitation labore in culpa mollit consequat ut ullamco. Amet qui exercitation est nostrud.',
+                      style: Styles.normal14,
+                    ),
                   ],
                 ),
-              ),
-            ],
+                const SizedBox(height: 6),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: Container(
+                    height: 350,
+                    width: 500,
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
+                // ManageButton(
+                //   onPressed: () {
+                //     AppRouter.navigateToWithExtra(
+                //         context, AppRouter.leagueTable, league);
+                //   },
+                // ),
+                // const SizedBox(width: 5),
+                // EditButton(
+                //   onPressed: () {
+                //     AppRouter.navigateToWithExtra(
+                //         context, AppRouter.editLeague, league);
+                //   },
+                // ),
+                // const SizedBox(width: 5),
+                // DeleteButton(
+                //   onPressed: () {
+                //     BlocProvider.of<LeaguesCubit>(context)
+                //         .deleteLeague(league);
+                //   },
+                // ),
+              ],
+            ),
           ),
         ),
       );

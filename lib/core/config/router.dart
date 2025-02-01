@@ -18,6 +18,8 @@ import 'package:pmf_admin/features/home/presentation/view/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pmf_admin/features/leagues/presentation/views/edit_match_view.dart';
+import 'package:pmf_admin/features/posts/presentation/views/add_post_view.dart';
+import 'package:pmf_admin/features/posts/presentation/views/posts_view.dart';
 import 'package:pmf_admin/features/treasury/presentation/views/treasury_view.dart';
 import 'package:pmf_admin/features/users/data/repo/users_repo_implementation.dart';
 import 'package:pmf_admin/features/users/presentation/manager/get%20users%20cubit/get_users_cubit.dart';
@@ -36,6 +38,8 @@ class AppRouter {
   static const users = '/users';
   static const treasury = '/treasury';
   static const cups = '/cups';
+  static const posts = '/posts';
+  static const addPost = '/add-post';
 
   static final router = GoRouter(
     routes: [
@@ -206,6 +210,18 @@ class AppRouter {
             path: cups,
             pageBuilder: (context, state) => const NoTransitionPage(
               child: CupsView(),
+            ),
+          ),
+          GoRoute(
+            path: posts,
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: PostsView(),
+            ),
+          ),
+          GoRoute(
+            path: addPost,
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: AddPostView(),
             ),
           ),
         ],

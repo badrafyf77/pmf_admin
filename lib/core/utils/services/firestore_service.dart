@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pmf_admin/core/utils/models/fixture_model.dart';
 import 'package:pmf_admin/core/utils/models/player_model.dart';
 import 'package:pmf_admin/features/leagues/data/model/league_model.dart';
+import 'package:pmf_admin/features/posts/data/models/post_model.dart';
 import 'package:pmf_admin/features/users/data/models/user_info_model.dart';
 
 class FirestoreService {
@@ -9,6 +10,8 @@ class FirestoreService {
   final String participations = "participations";
   CollectionReference leagues =
       FirebaseFirestore.instance.collection('leagues');
+      CollectionReference posts =
+      FirebaseFirestore.instance.collection('posts');
   CollectionReference users = FirebaseFirestore.instance.collection('users');
   CollectionReference visits = FirebaseFirestore.instance.collection('visits');
 
@@ -93,6 +96,26 @@ class FirestoreService {
       }
     }
     await leagues.doc(league.id).delete();
+  }
+
+  Future<void> addPost(Post post) async {
+    await posts.doc(post.id).set(post.toJson());
+  }
+
+  Future<List<Post>> getPosts() async {
+    List<Post> postsList = [];
+    await posts.orderBy('date', descending: true).get().then((post) {
+      for (var doc in post.docs) {
+        postsList.add(Post.fromJson(doc));
+      }
+    });
+    return postsList;
+  }
+
+  Future<void> deletePost(String postId) async {
+    await posts
+        .doc(postId)
+        .delete();
   }
 
   Future<List<Player>> getPlayers(String leagueID) async {
