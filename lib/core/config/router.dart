@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pmf_admin/core/utils/models/fixture_model.dart';
 import 'package:pmf_admin/core/utils/models/player_model.dart';
 import 'package:pmf_admin/core/utils/service_locator.dart';
+import 'package:pmf_admin/features/cups/presentation/views/cups_view.dart';
 import 'package:pmf_admin/features/leagues/data/model/league_model.dart';
 import 'package:pmf_admin/core/utils/customs/dashboard_screen.dart';
 import 'package:pmf_admin/features/auth/presentation/views/sign_in_view.dart';
@@ -34,6 +35,7 @@ class AppRouter {
   static const changePlayer = '/change-player';
   static const users = '/users';
   static const treasury = '/treasury';
+  static const cups = '/cups';
 
   static final router = GoRouter(
     routes: [
@@ -198,6 +200,12 @@ class AppRouter {
             path: treasury,
             pageBuilder: (context, state) => const NoTransitionPage(
               child: TreasuryView(),
+            ),
+          ),
+          GoRoute(
+            path: cups,
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: CupsView(),
             ),
           ),
         ],
